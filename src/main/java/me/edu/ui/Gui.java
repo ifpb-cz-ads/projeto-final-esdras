@@ -1,49 +1,70 @@
 package me.edu.ui;
 
 import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 public class Gui {
+    private static final int WINDOW_WIDTH = 800;
+    private static final int WINDOW_HEIGHT = 500;
+
+    private static final Color LIGHT_GRAY = new Color(242, 242, 242);
+    private static final Color GREEN = new Color(20, 202, 104);
+    private static final Color RED = new Color(193, 60, 60);
+
     private Gui() {
     }
 
-    private static JPanel createUriPanel() {
-        // creating the uri input panel
-        JPanel uriPanel = new JPanel();
-        // uri input
-        JTextField uriInput = new JTextField(50);
-        uriPanel.setLayout(new BoxLayout(uriPanel, BoxLayout.LINE_AXIS));
-
-        // connect button
-        JButton button = new JButton("conectar");
-        button.setBackground(new Color(28, 61, 146));
-        button.setForeground(Color.white);
-
-        uriPanel.add(uriInput);
-        uriPanel.add(button);
-
-        return uriPanel;
-    }
-
     public static void init() {
-        JFrame windowFrame = new JFrame();
+        JFrame windowFrame = new JFrame("MJ");
 
-        // getting all panels
-        JPanel uriPanel = createUriPanel();
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new GridBagLayout());
 
-        windowFrame.setSize(800, 600);
-        windowFrame.setResizable(false);
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.gridwidth = 1;
+        gbc.gridheight = 1;
+
+        gbc.fill = GridBagConstraints.BOTH;
+
+        JPanel headerSection = new JPanel();
+        headerSection.add(new JLabel("Header Section"));
+        headerSection.setOpaque(true);
+        headerSection.setBackground(GREEN);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        mainPanel.add(headerSection, gbc);
+
+        JPanel dbsSection = new JPanel();
+        dbsSection.add(new JLabel("DBs Section"));
+        dbsSection.setOpaque(true);
+        dbsSection.setBackground(GREEN);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        mainPanel.add(dbsSection, gbc);
+
+        JPanel queryToolSection = new JPanel();
+        queryToolSection.add(new JLabel("Query Tool Section"));
+        queryToolSection.setOpaque(true);
+        queryToolSection.setBackground(GREEN);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        mainPanel.add(queryToolSection, gbc);
+
+        windowFrame.add(mainPanel);
+
+        windowFrame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         windowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        // adding all the panels
-        windowFrame.add(uriPanel);
-
         windowFrame.setVisible(true);
     }
-}
+};
