@@ -1,5 +1,6 @@
 package me.edu.ui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -27,6 +28,7 @@ public class Gui {
     private static final Color LIGHT_GRAY = new Color(242, 242, 242);
     private static final Color GREEN = new Color(20, 202, 104);
     private static final Color RED = new Color(193, 60, 60);
+    private static final Color WHITE = new Color(255, 255, 255);
 
     // fonts
     private static final Font SANS_18 = new Font(Font.SANS_SERIF, Font.PLAIN, 18);
@@ -61,11 +63,51 @@ public class Gui {
 
     private static JPanel createDBsSection() {
         JPanel dbsSection = new JPanel();
-        dbsSection.add(new JLabel("DBs Section"));
         dbsSection.setOpaque(true);
-        dbsSection.setBackground(GREEN);
+
+        dbsSection.setLayout(new BorderLayout());
+
+        JPanel container = new JPanel();
+
+        dbsSection.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        gbc.insets = new Insets(4, 4, 4, 4);
+        gbc.weightx = 1.0;
+        gbc.ipady = 40;
+        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.gridwidth = 1;
+
+        for (int i = 0; i <= 10; i++) {
+            gbc.gridy = i;
+            dbsSection.add(createDbItem("Database " + i + 1), gbc);
+        }
 
         return dbsSection;
+    }
+
+    private static JPanel createDbItem(String name) {
+        JPanel panel = new JPanel();
+
+        JLabel title = new JLabel(name);
+
+        JButton removeButton = new JButton("remover");
+        JButton connectButton = new JButton("Conectar");
+
+        // panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
+        panel.setOpaque(true);
+        panel.setBackground(WHITE);
+
+        Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
+        panel.setBorder(padding);
+
+        panel.add(title);
+        panel.add(removeButton);
+        panel.add(connectButton);
+
+        return panel;
     }
 
     private static JPanel createQueryToolSection() {
@@ -104,7 +146,7 @@ public class Gui {
         JPanel dbsSection = createDBsSection();
         gbc.gridx = 0;
         gbc.gridy = 1;
-        gbc.ipady = 400;
+        gbc.ipady = 0;
         mainPanel.add(dbsSection, gbc);
 
         // creating and setting up query tool section
