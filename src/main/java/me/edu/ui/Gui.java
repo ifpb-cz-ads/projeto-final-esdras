@@ -2,34 +2,59 @@ package me.edu.ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.UIManager;
+import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 
 public class Gui {
     private static final int WINDOW_WIDTH = 800;
     private static final int WINDOW_HEIGHT = 500;
 
+    // colors
     private static final Color LIGHT_GRAY = new Color(242, 242, 242);
     private static final Color GREEN = new Color(20, 202, 104);
     private static final Color RED = new Color(193, 60, 60);
+
+    // fonts
+    private static final Font SANS_18 = new Font(Font.SANS_SERIF, Font.PLAIN, 18);
 
     private Gui() {
     }
 
     private static JPanel createHeaderSection() {
         JPanel headerSection = new JPanel();
-        headerSection.add(new JLabel("Header Section"));
-        headerSection.setOpaque(true);
-        headerSection.setBackground(GREEN);
+
+        // setting up the uri input
+        JTextField inputUri = new JTextField();
+        inputUri.setMaximumSize(new Dimension(600, 40));
+        Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
+        inputUri.setBorder(padding);
+        inputUri.setFont(SANS_18);
+
+        // setting up the conenct button
+        JButton connectButton = new JButton("conectar");
+        connectButton.setBackground(GREEN);
+        connectButton.setForeground(Color.white);
+        connectButton.setMaximumSize(new Dimension(150, 40));
+        connectButton.setFont(SANS_18);
+
+        headerSection.add(inputUri);
+        headerSection.add(connectButton);
+
+        headerSection.setLayout(new BoxLayout(headerSection, BoxLayout.LINE_AXIS));
 
         return headerSection;
     }
