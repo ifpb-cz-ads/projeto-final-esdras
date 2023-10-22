@@ -27,30 +27,30 @@ import javax.swing.JTextPane;
 import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 
-import me.edu.database.Connection;
+import me.edu.components.DatabasesPanel;
+import me.edu.database.ConnectionWorker;
 
 public class Gui {
     private final int WINDOW_WIDTH = 800;
     private final int WINDOW_HEIGHT = 500;
 
     // threads
-    private final Connection connection = new Connection(this);
 
     // colors
-    private final Color LIGHT_GRAY = new Color(242, 242, 242);
-    private final Color GREEN = new Color(20, 202, 104);
-    private final Color RED = new Color(193, 60, 60);
-    private final Color WHITE = new Color(255, 255, 255);
-    private final Color BLUE = new Color(28, 161, 146);
+    public static final Color LIGHT_GRAY = new Color(242, 242, 242);
+    public static final Color GREEN = new Color(20, 202, 104);
+    public static final Color RED = new Color(193, 60, 60);
+    public static final Color WHITE = new Color(255, 255, 255);
+    public static final Color BLUE = new Color(28, 161, 146);
 
     // fonts
-    private final Font SANS_18 = new Font(Font.SANS_SERIF, Font.PLAIN, 18);
-    private final Font SANS_24 = new Font(Font.SANS_SERIF, Font.PLAIN, 24);
-    private final Font SANS_14 = new Font(Font.SANS_SERIF, Font.PLAIN, 14);
-    private final Font SANS_14_BOLD = new Font(Font.SANS_SERIF, Font.BOLD, 14);
+    public static final Font SANS_18 = new Font(Font.SANS_SERIF, Font.PLAIN, 18);
+    public static final Font SANS_24 = new Font(Font.SANS_SERIF, Font.PLAIN, 24);
+    public static final Font SANS_14 = new Font(Font.SANS_SERIF, Font.PLAIN, 14);
+    public static final Font SANS_14_BOLD = new Font(Font.SANS_SERIF, Font.BOLD, 14);
 
     // panels
-    JPanel databasesPanel = new JPanel();
+    JPanel databasesPanel = new DatabasesPanel();
     JPanel headerPanel = new JPanel();
     JPanel queryToolPanel = new JPanel();
 
@@ -62,10 +62,9 @@ public class Gui {
 
     public void receiveData(List<String> data) {
         databases.addAll(data);
-        updateDatabasesListUI();
     }
 
-    private JButton createButton(String title, Font font) {
+    public static JButton createButton(String title, Font font) {
         JButton button = new JButton(title);
         button.setFont(font);
         button.setPreferredSize(new Dimension(150, 10));
@@ -73,7 +72,7 @@ public class Gui {
         return button;
     }
 
-    private JButton createButton(String title, Font font, Color background, Color foreground) {
+    public static JButton createButton(String title, Font font, Color background, Color foreground) {
         JButton button = createButton(title, font);
         button.setBackground(background);
         button.setForeground(foreground);
@@ -99,80 +98,15 @@ public class Gui {
         connectButton.setFont(SANS_18);
 
         // adding listener
-        connectButton.addActionListener(connection);
+        connectButton.addActionListener(listener -> {
+            ConnectionWorker connectionWorker = new ConnectionWorker();
+            connectionWorker.execute();
+        });
 
         headerPanel.add(inputUri);
         headerPanel.add(connectButton);
 
         headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.LINE_AXIS));
-
-    }
-
-    private JPanel createDbItem(String name) {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
-
-        JLabel title = new JLabel(name);
-
-        // panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
-        title.setOpaque(true);
-        title.setBackground(WHITE);
-        title.setMaximumSize(new Dimension(500, 40));
-        title.setFont(SANS_18);
-
-        JButton removeButton = createButton("remover", SANS_14_BOLD, RED, WHITE);
-        removeButton.setMaximumSize(new Dimension(150, 40));
-
-        JButton connectButton = createButton("conectar", SANS_14_BOLD, GREEN, WHITE);
-        connectButton.setMaximumSize(new Dimension(150, 40));
-
-        Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
-        title.setBorder(padding);
-
-        panel.add(title);
-        panel.add(removeButton);
-        panel.add(connectButton);
-
-        return panel;
-    }
-
-    private void updateDatabasesListUI() {
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(4, 4, 4, 4);
-        gbc.weightx = 1.0;
-        gbc.ipady = 40;
-        gbc.anchor = GridBagConstraints.NORTH;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridx = 0;
-        gbc.gridwidth = 1;
-
-        int i = 1; // must start with 1
-        for (String database : databases) {
-            System.out.println(i);
-            databasesPanel.add(createDbItem(database + " " + i), gbc);
-            gbc.gridy = ++i;
-        }
-    }
-
-    private void configureDatabasesPanel() {
-        databasesPanel.setOpaque(true);
-        databasesPanel.setLayout(new GridBagLayout());
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(4, 4, 4, 4);
-        gbc.weightx = 1.0;
-        gbc.ipady = 40;
-        gbc.anchor = GridBagConstraints.NORTH;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridx = 0;
-        gbc.gridwidth = 1;
-
-        JLabel sectionTitle = new JLabel("Databases");
-        sectionTitle.setFont(SANS_24);
-        databasesPanel.add(sectionTitle, gbc);
-
-        updateDatabasesListUI();
 
     }
 
@@ -248,8 +182,6 @@ public class Gui {
         gbc.ipady = 70;
         mainPanel.add(headerPanel, gbc);
 
-        // creating and setting up databases section
-        configureDatabasesPanel();
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.ipady = 0;
