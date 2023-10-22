@@ -1,6 +1,9 @@
 package me.edu.components;
 
+import java.awt.BorderLayout;
+import java.awt.Dialog;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -11,23 +14,23 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.Border;
 
 import me.edu.ui.Gui;
 
 public class DatabasesPanel extends JPanel {
     private List<String> databases;
+    private JDialog createDbDialog;
 
-    public void updateDatabases(List<String> databases) {
-        this.databases = new ArrayList<>();
-        this.databases.addAll(databases);
-
-        updateDatabasesListUI();
-    }
-
+    // constructor
     public DatabasesPanel() {
+        setUpDialog();
+
+        // setting up panel
         setOpaque(true);
         setLayout(new GridBagLayout());
 
@@ -43,6 +46,44 @@ public class DatabasesPanel extends JPanel {
         JLabel sectionTitle = new JLabel("Databases");
         sectionTitle.setFont(Gui.SANS_24);
         add(sectionTitle, gbc);
+    }
+
+    private void setUpDialog() {
+        // setting up dialog
+        createDbDialog = new JDialog();
+        createDbDialog.setLayout(new BorderLayout(8, 20));
+        createDbDialog.setSize(400, 200);
+        createDbDialog.setResizable(false);
+
+        createDbDialog.setTitle("Criar DB");
+
+        JLabel titleLable = new JLabel("Nome");
+        JTextField titleField = new JTextField();
+        titleLable.setFont(Gui.SANS_18);
+        titleField.setFont(Gui.SANS_18);
+
+        Border padding = BorderFactory.createEmptyBorder(8, 8, 8, 8);
+        titleField.setBorder(padding);
+        JPanel dialogPanel = (JPanel) createDbDialog.getContentPane();
+        dialogPanel.setBorder(padding);
+
+        JButton confirmCreateBtn = new JButton("criar");
+        confirmCreateBtn.setBackground(Gui.DARK_BLUE);
+        confirmCreateBtn.setFont(Gui.SANS_18);
+        confirmCreateBtn.setForeground(Gui.WHITE);
+
+        createDbDialog.add(titleLable, BorderLayout.NORTH);
+        createDbDialog.add(titleField, BorderLayout.CENTER);
+        createDbDialog.add(confirmCreateBtn, BorderLayout.SOUTH);
+
+        createDbDialog.setVisible(true);
+    }
+
+    public void updateDatabases(List<String> databases) {
+        this.databases = new ArrayList<>();
+        this.databases.addAll(databases);
+
+        updateDatabasesListUI();
     }
 
     private JPanel createDbItem(String name) {
@@ -99,6 +140,12 @@ public class DatabasesPanel extends JPanel {
             add(createDbItem(database + " " + i), gbc);
             gbc.gridy = ++i;
         }
+
+        gbc.fill = GridBagConstraints.NONE;
+        JButton createDbButton = Gui.createButton("criar db", Gui.SANS_18, Gui.DARK_BLUE, Gui.WHITE);
+        add(createDbButton, gbc);
+
+        //
 
         revalidate();
     }

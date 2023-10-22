@@ -25,6 +25,7 @@ import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 
 import com.mongodb.MongoClient;
+import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoIterable;
 
 import me.edu.components.DatabasesPanel;
@@ -42,6 +43,7 @@ public class Gui {
     public static final Color RED = new Color(193, 60, 60);
     public static final Color WHITE = new Color(255, 255, 255);
     public static final Color BLUE = new Color(28, 161, 146);
+    public static final Color DARK_BLUE = new Color(3, 25, 82);
 
     // fonts
     public static final Font SANS_18 = new Font(Font.SANS_SERIF, Font.PLAIN, 18);
