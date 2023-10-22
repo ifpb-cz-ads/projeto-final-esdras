@@ -8,9 +8,9 @@ public class MClient {
     private MClient() {
     }
 
-    public static MongoClient get() {
+    public static MongoClient get(String uri) {
         if (client == null)
-            client = new MongoClient("localhost", 27017);
+            client = new MongoClient(uri);
 
         return client;
     }

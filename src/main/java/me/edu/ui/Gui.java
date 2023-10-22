@@ -1,15 +1,11 @@
 package me.edu.ui;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,7 +24,11 @@ import javax.swing.SwingWorker;
 import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoIterable;
+
 import me.edu.components.DatabasesPanel;
+import me.edu.database.MClient;
 
 public class Gui {
     private final int WINDOW_WIDTH = 800;
@@ -53,6 +53,10 @@ public class Gui {
     DatabasesPanel databasesPanel = new DatabasesPanel();
     JPanel headerPanel = new JPanel();
     JPanel queryToolPanel = new JPanel();
+
+    // elements
+    private MongoClient mongoClient;
+    private JTextField inputUri;
 
     public Gui() {
     }
@@ -80,9 +84,9 @@ public class Gui {
     private void configureHeaderPanel() {
 
         // setting up the uri input
-        JTextField inputUri = new JTextField();
+        inputUri = new JTextField();
         inputUri.setMaximumSize(new Dimension(700, 40));
-        inputUri.setText("http://localhost:27017/test");
+        inputUri.setText("localhost:27017");
         Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
         inputUri.setBorder(padding);
         inputUri.setFont(SANS_18);
@@ -99,9 +103,14 @@ public class Gui {
             SwingWorker swingWorker = new SwingWorker<Boolean, Void>() {
                 @Override
                 public Boolean doInBackground() {
-                    System.out.println("Getting databases");
-                    databasesPanel.updateDatabases(Arrays.asList("db", "db", "db", "db"));
-                    System.out.println("Databases get");
+                    mongoClient = MClient.get(inputUri.getText());
+                    MongoIterable<String> dbList = mongoClient.listDatabaseNames();
+
+                    List<String> allDatabases = new ArrayList<>();
+                    for (String db : dbList)
+                        allDatabases.add(db);
+
+                    databasesPanel.updateDatabases(allDatabases);
                     return true;
                 }
 
