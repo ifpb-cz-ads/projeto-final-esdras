@@ -7,7 +7,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -24,10 +23,9 @@ import javax.swing.SwingWorker;
 import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 
-import com.mongodb.MongoClient;
-import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoIterable;
 
+import me.edu.App;
 import me.edu.components.DatabasesPanel;
 import me.edu.database.MClient;
 
@@ -57,7 +55,6 @@ public class Gui {
     JPanel queryToolPanel = new JPanel();
 
     // elements
-    private MongoClient mongoClient;
     private JTextField inputUri;
 
     public Gui() {
@@ -102,11 +99,12 @@ public class Gui {
 
         // adding listener
         connectButton.addActionListener(listener -> {
-            SwingWorker swingWorker = new SwingWorker<Boolean, Void>() {
+            SwingWorker<Boolean, Void> swingWorker = new SwingWorker<Boolean, Void>() {
                 @Override
                 public Boolean doInBackground() {
-                    mongoClient = MClient.get(inputUri.getText());
-                    MongoIterable<String> dbList = mongoClient.listDatabaseNames();
+                    App.setClient(MClient.get(inputUri.getText()));
+
+                    MongoIterable<String> dbList = App.getClient().listDatabaseNames();
 
                     List<String> allDatabases = new ArrayList<>();
                     for (String db : dbList)

@@ -24,11 +24,10 @@ import me.edu.ui.Gui;
 
 public class DatabasesPanel extends JPanel {
     private List<String> databases;
-    private JDialog createDbDialog;
+    private CreateDBDialog createDBDialog = new CreateDBDialog();
 
     // constructor
     public DatabasesPanel() {
-        setUpDialog();
 
         // setting up panel
         setOpaque(true);
@@ -46,37 +45,6 @@ public class DatabasesPanel extends JPanel {
         JLabel sectionTitle = new JLabel("Databases");
         sectionTitle.setFont(Gui.SANS_24);
         add(sectionTitle, gbc);
-    }
-
-    private void setUpDialog() {
-        // setting up dialog
-        createDbDialog = new JDialog();
-        createDbDialog.setLayout(new BorderLayout(8, 20));
-        createDbDialog.setSize(400, 200);
-        createDbDialog.setResizable(false);
-
-        createDbDialog.setTitle("Criar DB");
-
-        JLabel titleLable = new JLabel("Nome");
-        JTextField titleField = new JTextField();
-        titleLable.setFont(Gui.SANS_18);
-        titleField.setFont(Gui.SANS_18);
-
-        Border padding = BorderFactory.createEmptyBorder(8, 8, 8, 8);
-        titleField.setBorder(padding);
-        JPanel dialogPanel = (JPanel) createDbDialog.getContentPane();
-        dialogPanel.setBorder(padding);
-
-        JButton confirmCreateBtn = new JButton("criar");
-        confirmCreateBtn.setBackground(Gui.DARK_BLUE);
-        confirmCreateBtn.setFont(Gui.SANS_18);
-        confirmCreateBtn.setForeground(Gui.WHITE);
-
-        createDbDialog.add(titleLable, BorderLayout.NORTH);
-        createDbDialog.add(titleField, BorderLayout.CENTER);
-        createDbDialog.add(confirmCreateBtn, BorderLayout.SOUTH);
-
-        createDbDialog.setVisible(true);
     }
 
     public void updateDatabases(List<String> databases) {
@@ -145,7 +113,9 @@ public class DatabasesPanel extends JPanel {
         JButton createDbButton = Gui.createButton("criar db", Gui.SANS_18, Gui.DARK_BLUE, Gui.WHITE);
         add(createDbButton, gbc);
 
-        //
+        createDbButton.addActionListener(listener -> {
+            createDBDialog.setVisible(true);
+        });
 
         revalidate();
     }
