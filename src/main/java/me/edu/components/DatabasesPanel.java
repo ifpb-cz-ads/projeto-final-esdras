@@ -18,7 +18,14 @@ import javax.swing.border.Border;
 import me.edu.ui.Gui;
 
 public class DatabasesPanel extends JPanel {
-    private List<String> databases = Arrays.asList("Database", "Database", "Database");
+    private List<String> databases;
+
+    public void updateDatabases(List<String> databases) {
+        this.databases = new ArrayList<>();
+        this.databases.addAll(databases);
+
+        updateDatabasesListUI();
+    }
 
     public DatabasesPanel() {
         setOpaque(true);
@@ -36,8 +43,6 @@ public class DatabasesPanel extends JPanel {
         JLabel sectionTitle = new JLabel("Databases");
         sectionTitle.setFont(Gui.SANS_24);
         add(sectionTitle, gbc);
-
-        updateDatabasesListUI();
     }
 
     private JPanel createDbItem(String name) {
@@ -79,11 +84,22 @@ public class DatabasesPanel extends JPanel {
         gbc.gridx = 0;
         gbc.gridwidth = 1;
 
+        // remove all databases before updating
+        removeAll();
+
+        // adding title
+        gbc.gridy = 0;
+        JLabel sectionTitle = new JLabel("Databases");
+        sectionTitle.setFont(Gui.SANS_24);
+        add(sectionTitle, gbc);
+
         int i = 1; // must start with 1
+        gbc.gridy = i;
         for (String database : databases) {
-            System.out.println(i);
             add(createDbItem(database + " " + i), gbc);
             gbc.gridy = ++i;
         }
+
+        revalidate();
     }
 }

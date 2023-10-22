@@ -24,11 +24,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.SwingWorker;
 import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 
 import me.edu.components.DatabasesPanel;
-import me.edu.database.ConnectionWorker;
 
 public class Gui {
     private final int WINDOW_WIDTH = 800;
@@ -50,18 +50,15 @@ public class Gui {
     public static final Font SANS_14_BOLD = new Font(Font.SANS_SERIF, Font.BOLD, 14);
 
     // panels
-    JPanel databasesPanel = new DatabasesPanel();
+    DatabasesPanel databasesPanel = new DatabasesPanel();
     JPanel headerPanel = new JPanel();
     JPanel queryToolPanel = new JPanel();
-
-    // data
-    private List<String> databases = new ArrayList<>();
 
     public Gui() {
     }
 
     public void receiveData(List<String> data) {
-        databases.addAll(data);
+        databasesPanel.updateDatabases(data);
     }
 
     public static JButton createButton(String title, Font font) {
@@ -99,8 +96,18 @@ public class Gui {
 
         // adding listener
         connectButton.addActionListener(listener -> {
-            ConnectionWorker connectionWorker = new ConnectionWorker();
-            connectionWorker.execute();
+            SwingWorker swingWorker = new SwingWorker<Boolean, Void>() {
+                @Override
+                public Boolean doInBackground() {
+                    System.out.println("Getting databases");
+                    databasesPanel.updateDatabases(Arrays.asList("db", "db", "db", "db"));
+                    System.out.println("Databases get");
+                    return true;
+                }
+
+            };
+
+            swingWorker.execute();
         });
 
         headerPanel.add(inputUri);
