@@ -10,12 +10,20 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
+import com.mongodb.client.MongoDatabase;
+
+import me.edu.App;
 import me.edu.ui.Gui;
 
 public class CreateDBDialog extends JDialog {
+    JTextField titleField = new JTextField();
+    DatabasesPanel databasesPanel;
 
-    public CreateDBDialog() {
+    public CreateDBDialog(DatabasesPanel databasesPanel) {
         super();
+
+        this.databasesPanel = databasesPanel;
+
         // setting up dialog
         setLayout(new BorderLayout(8, 20));
         setSize(400, 200);
@@ -24,7 +32,7 @@ public class CreateDBDialog extends JDialog {
         setTitle("Criar DB");
 
         JLabel titleLable = new JLabel("Nome");
-        JTextField titleField = new JTextField();
+
         titleLable.setFont(Gui.SANS_18);
         titleField.setFont(Gui.SANS_18);
 
@@ -37,6 +45,17 @@ public class CreateDBDialog extends JDialog {
         confirmCreateBtn.setBackground(Gui.DARK_BLUE);
         confirmCreateBtn.setFont(Gui.SANS_18);
         confirmCreateBtn.setForeground(Gui.WHITE);
+
+        // listener for create database
+        confirmCreateBtn.addActionListener(listener -> {
+            MongoDatabase md = App.createDatabase(titleField.getText());
+
+            if (md != null) {
+                databasesPanel.addDatabase(md.getName());
+                setVisible(false);
+            }
+
+        });
 
         add(titleLable, BorderLayout.NORTH);
         add(titleField, BorderLayout.CENTER);

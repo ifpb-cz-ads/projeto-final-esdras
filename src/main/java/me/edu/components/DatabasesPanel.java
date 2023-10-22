@@ -24,7 +24,7 @@ import me.edu.ui.Gui;
 
 public class DatabasesPanel extends JPanel {
     private List<String> databases;
-    private CreateDBDialog createDBDialog = new CreateDBDialog();
+    private CreateDBDialog createDBDialog = new CreateDBDialog(this);
 
     // constructor
     public DatabasesPanel() {
@@ -45,6 +45,20 @@ public class DatabasesPanel extends JPanel {
         JLabel sectionTitle = new JLabel("Databases");
         sectionTitle.setFont(Gui.SANS_24);
         add(sectionTitle, gbc);
+    }
+
+    public void addDatabase(String databaseName) {
+        List<String> newDatabases = new ArrayList<>();
+        newDatabases.addAll(databases);
+        newDatabases.add(databaseName);
+
+        for (String db : newDatabases) {
+            System.out.println(">>> " + db);
+        }
+
+        this.databases = new ArrayList<>(newDatabases);
+
+        updateDatabasesListUI();
     }
 
     public void updateDatabases(List<String> databases) {
