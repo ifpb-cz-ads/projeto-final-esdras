@@ -26,6 +26,7 @@ import javax.swing.plaf.basic.BasicScrollBarUI;
 import com.mongodb.client.MongoIterable;
 
 import me.edu.App;
+import me.edu.components.CollectionsPanel;
 import me.edu.components.DatabasesPanel;
 import me.edu.database.MClient;
 
@@ -51,8 +52,8 @@ public class Gui {
 
     // panels
     DatabasesPanel databasesPanel = new DatabasesPanel();
+    CollectionsPanel collectionsPanel = new CollectionsPanel();
     JPanel headerPanel = new JPanel();
-    JPanel queryToolPanel = new JPanel();
 
     // elements
     private JTextField inputUri;
@@ -126,10 +127,10 @@ public class Gui {
 
     }
 
-    private void configureQueryToolPanel() {
-        queryToolPanel.setOpaque(true);
+    private void configureCollectionsSection() {
+        collectionsPanel.setOpaque(true);
 
-        queryToolPanel.setLayout(new GridBagLayout());
+        collectionsPanel.setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(4, 4, 4, 4);
@@ -143,7 +144,7 @@ public class Gui {
         gbc.gridy = 0;
         JLabel sectionTitle = new JLabel("Query Tool");
         sectionTitle.setFont(SANS_24);
-        queryToolPanel.add(sectionTitle, gbc);
+        collectionsPanel.add(sectionTitle, gbc);
 
         Border padding = BorderFactory.createEmptyBorder(10, 10, 0, 10);
 
@@ -153,25 +154,25 @@ public class Gui {
         queryArea.setFont(SANS_18);
         queryArea.setWrapStyleWord(true);
         queryArea.setLineWrap(true);
-        queryToolPanel.add(queryArea, gbc);
+        collectionsPanel.add(queryArea, gbc);
 
         gbc.gridy = 2;
         gbc.fill = GridBagConstraints.NONE;
         JButton queryButton = createButton("Requisitar", SANS_18, BLUE, WHITE);
-        queryToolPanel.add(queryButton, gbc);
+        collectionsPanel.add(queryButton, gbc);
 
         gbc.gridy = 3;
         JLabel sectionTitle2 = new JLabel("Response");
         sectionTitle.setFont(SANS_18);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        queryToolPanel.add(sectionTitle2, gbc);
+        collectionsPanel.add(sectionTitle2, gbc);
 
         gbc.gridy = 4;
         JTextPane queryResponsePane = new JTextPane();
         queryResponsePane.setText("Faça uma requsição para obter respostas");
         queryResponsePane.setBorder(padding);
         queryResponsePane.setEditable(false);
-        queryToolPanel.add(queryResponsePane, gbc);
+        collectionsPanel.add(queryResponsePane, gbc);
 
     }
 
@@ -186,28 +187,20 @@ public class Gui {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
-        gbc.gridwidth = 1;
-        gbc.gridheight = 1;
-
         gbc.fill = GridBagConstraints.BOTH;
 
         // creating and setting up header section
         configureHeaderPanel();
-        gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.ipady = 70;
         mainPanel.add(headerPanel, gbc);
 
-        gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.ipady = 0;
         mainPanel.add(databasesPanel, gbc);
 
         // creating and setting up query tool section
-        configureQueryToolPanel();
-        gbc.gridx = 0;
         gbc.gridy = 2;
-        mainPanel.add(queryToolPanel, gbc);
+        mainPanel.add(collectionsPanel, gbc);
 
         // Create a JScrollPane to make the window scrollable
         JScrollPane scrollPane = new JScrollPane(mainPanel);

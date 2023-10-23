@@ -34,11 +34,10 @@ public class DatabasesPanel extends JPanel {
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(4, 4, 4, 4);
-        gbc.weightx = 1.0;
-        gbc.anchor = GridBagConstraints.NORTH;
         gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+        gbc.weightx = 1.0;
         gbc.gridx = 0;
-        gbc.gridwidth = 1;
 
         JLabel sectionTitle = new JLabel("DBs");
         sectionTitle.setFont(Gui.SANS_24);
