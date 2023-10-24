@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -15,11 +17,13 @@ import javax.swing.border.Border;
 import me.edu.ui.Gui;
 
 public class CollectionsPanel extends JPanel {
-    public JPanel createCollectionItem() {
+    List<String> collections;
+
+    public JPanel createCollectionItem(String collectionName) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
 
-        JLabel titleLabel = new JLabel("Collection");
+        JLabel titleLabel = new JLabel(collectionName);
         titleLabel.setOpaque(true);
         titleLabel.setMaximumSize(new Dimension(500, 40));
         titleLabel.setFont(Gui.SANS_18);
@@ -42,9 +46,15 @@ public class CollectionsPanel extends JPanel {
     }
 
     public CollectionsPanel() {
+        this.collections = new ArrayList<>();
+
         setOpaque(true);
         setLayout(new GridBagLayout());
 
+        updateCollectionsUI();
+    }
+
+    public void updateCollectionsUI() {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(4, 4, 4, 4);
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -57,14 +67,20 @@ public class CollectionsPanel extends JPanel {
         titleLabel.setFont(Gui.SANS_24);
         add(titleLabel, gbc);
 
-        gbc.gridy = 1;
-        add(createCollectionItem(), gbc);
+        int i = 1;
+        for (String collection : collections) {
+            gbc.gridy = i++;
+            add(createCollectionItem(collection), gbc);
 
-        gbc.gridy = 2;
-        add(createCollectionItem(), gbc);
+        }
 
-        gbc.gridy = 3;
-        add(createCollectionItem(), gbc);
+        revalidate();
+    }
 
+    public void updateCollections(List<String> collections) {
+        this.collections = new ArrayList<>();
+        this.collections.addAll(collections);
+
+        updateCollectionsUI();
     }
 }

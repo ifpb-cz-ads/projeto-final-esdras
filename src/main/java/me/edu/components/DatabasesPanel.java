@@ -16,8 +16,10 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingWorker;
 import javax.swing.border.Border;
 
+import me.edu.App;
 import me.edu.ui.Gui;
 
 public class DatabasesPanel extends JPanel {
@@ -81,8 +83,20 @@ public class DatabasesPanel extends JPanel {
             confirmDeleteDialog.askConfirm(name);
         });
 
+        // create connectio button
         JButton connectButton = Gui.createButton("conectar", Gui.SANS_14_BOLD, Gui.GREEN, Gui.WHITE);
         connectButton.setMaximumSize(new Dimension(150, 40));
+        connectButton.addActionListener(listener -> {
+            SwingWorker<Boolean, Void> swingWorker = new SwingWorker<Boolean, Void>() {
+                @Override
+                public Boolean doInBackground() {
+                    App.connectToDatabase(name);
+                    return true;
+                }
+            };
+
+            swingWorker.execute();
+        });
 
         Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
         title.setBorder(padding);

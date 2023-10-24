@@ -81,6 +81,19 @@ public class Gui {
         return button;
     }
 
+    public void loadCollections() {
+        MongoIterable<String> collections = App.targetDatabase.listCollectionNames();
+        List<String> collsList = new ArrayList<>();
+
+        for (String colName : collections) {
+            collsList.add(colName);
+        }
+
+        System.out.println(">>> Hello World");
+
+        collectionsPanel.updateCollections(collsList);
+    }
+
     private void configureHeaderPanel() {
 
         // setting up the uri input
@@ -124,55 +137,6 @@ public class Gui {
         headerPanel.add(connectButton);
 
         headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.LINE_AXIS));
-
-    }
-
-    private void configureCollectionsSection() {
-        collectionsPanel.setOpaque(true);
-
-        collectionsPanel.setLayout(new GridBagLayout());
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(4, 4, 4, 4);
-        gbc.weightx = 1.0;
-        gbc.ipady = 40;
-        gbc.anchor = GridBagConstraints.NORTH;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridx = 0;
-        gbc.gridwidth = 1;
-
-        gbc.gridy = 0;
-        JLabel sectionTitle = new JLabel("Query Tool");
-        sectionTitle.setFont(SANS_24);
-        collectionsPanel.add(sectionTitle, gbc);
-
-        Border padding = BorderFactory.createEmptyBorder(10, 10, 0, 10);
-
-        gbc.gridy = 1;
-        JTextArea queryArea = new JTextArea();
-        queryArea.setBorder(padding);
-        queryArea.setFont(SANS_18);
-        queryArea.setWrapStyleWord(true);
-        queryArea.setLineWrap(true);
-        collectionsPanel.add(queryArea, gbc);
-
-        gbc.gridy = 2;
-        gbc.fill = GridBagConstraints.NONE;
-        JButton queryButton = createButton("Requisitar", SANS_18, BLUE, WHITE);
-        collectionsPanel.add(queryButton, gbc);
-
-        gbc.gridy = 3;
-        JLabel sectionTitle2 = new JLabel("Response");
-        sectionTitle.setFont(SANS_18);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        collectionsPanel.add(sectionTitle2, gbc);
-
-        gbc.gridy = 4;
-        JTextPane queryResponsePane = new JTextPane();
-        queryResponsePane.setText("Faça uma requsição para obter respostas");
-        queryResponsePane.setBorder(padding);
-        queryResponsePane.setEditable(false);
-        collectionsPanel.add(queryResponsePane, gbc);
 
     }
 
