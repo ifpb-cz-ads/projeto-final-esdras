@@ -51,7 +51,6 @@ public class CollectionsPanel extends JPanel {
         setOpaque(true);
         setLayout(new GridBagLayout());
 
-        updateCollectionsUI();
     }
 
     public void updateCollectionsUI() {
