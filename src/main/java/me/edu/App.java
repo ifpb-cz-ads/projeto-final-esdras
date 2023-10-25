@@ -13,6 +13,8 @@ import me.edu.ui.Gui;
 
 public class App {
     public static MongoClient client = null;
+    public static MongoDatabase targetDatabase = null;
+    public static Gui gui = null;
 
     public static void setClient(MongoClient clt) {
         client = clt;
@@ -50,8 +52,16 @@ public class App {
         return null;
     }
 
-    public static void main(String[] args) {
-        new Gui().init();
+    public static void connectToDatabase(String databaseName) {
+        if (client != null) {
+            targetDatabase = client.getDatabase(databaseName);
+            gui.loadCollections();
+        }
+    }
 
+    public static void main(String[] args) {
+        gui = new Gui();
+
+        gui.init();
     }
 }
