@@ -1,6 +1,7 @@
 package me.edu.ui;
 
 import me.edu.controller.ClientController;
+import me.edu.controller.DataController;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -12,14 +13,7 @@ import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.SwingWorker;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 
@@ -27,13 +21,10 @@ import com.mongodb.client.MongoIterable;
 
 import me.edu.components.CollectionsPanel;
 import me.edu.components.DatabasesPanel;
-import me.edu.database.MClient;
 
 public class Gui {
     private final int WINDOW_WIDTH = 800;
     private final int WINDOW_HEIGHT = 500;
-
-    // threads
 
     // colors
     public static final Color LIGHT_GRAY = new Color(242, 242, 242);
@@ -60,10 +51,21 @@ public class Gui {
     public Gui() {
     }
 
-    public void receiveData(List<String> data) {
-        databasesPanel.updateDatabases(data);
+    
+    /**
+     * Updates the databases list ui*/
+    public void updatedatabasesUi(){
+      databasesPanel.updateListUi(); 
     }
 
+    /**
+     * Updates the collections list ui*/
+    public void updateCollectionsUi(){
+      collectionsPanel.updateListUi();
+    }
+    
+    /**
+     * Create a button*/
     public static JButton createButton(String title, Font font) {
         JButton button = new JButton(title);
         button.setFont(font);
@@ -71,7 +73,9 @@ public class Gui {
 
         return button;
     }
-
+    
+    /**
+     * Creates a button*/
     public static JButton createButton(String title, Font font, Color background, Color foreground) {
         JButton button = createButton(title, font);
         button.setBackground(background);
@@ -80,20 +84,53 @@ public class Gui {
         return button;
     }
 
-    public void loadCollections() {
-        MongoIterable<String> collections = ClientController.targetDatabase.listCollectionNames();
-        List<String> collsList = new ArrayList<>();
+    /**
+     * Creates a list item with a titel, a connect button and a remove button*/
+    public static JPanel createListItem(
+          String name, 
+          SwingWorker<Boolean, Void> connectWorker,
+          SwingWorker<Boolean, Void> removeWorker
+        ){
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
 
-        System.out.println("\n\n\tCollections exists " + collections.iterator().hasNext() + "\n\n");
+        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    
+        JLabel title = new JLabel(name);
 
-        for (String colName : collections) {
-            System.out.println("\n\n\t>>>>> " + colName + "\n\n");
-            collsList.add(colName);
-        }
+        // panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
+        title.setOpaque(true);
+        title.setBackground(Gui.WHITE);
+        title.setPreferredSize(new Dimension(300, 40));
+        title.setFont(Gui.SANS_18);
 
-        collectionsPanel.updateCollections(collsList);
+        JButton removeButton = Gui.createButton("remover", Gui.SANS_14_BOLD, Gui.RED, Gui.WHITE);
+        removeButton.setMaximumSize(new Dimension(150, 40));
+
+        // asking for confirmation
+        removeButton.addActionListener(listener -> {
+            removeWorker.execute();
+        });
+
+        // create connectio button
+        JButton connectButton = Gui.createButton("conectar", Gui.SANS_14_BOLD, Gui.GREEN, Gui.WHITE);
+        connectButton.setMaximumSize(new Dimension(150, 40));
+        connectButton.addActionListener(listener -> {
+            connectWorker.execute();
+        });
+
+        Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
+        title.setBorder(padding);
+
+        panel.add(title);
+        panel.add(removeButton);
+        panel.add(connectButton);
+
+        return panel;
     }
-
+    
+    /**
+     * Set up the header panel with the URI input and the connect button*/
     private void configureHeaderPanel() {
 
         // setting up the uri input
@@ -117,15 +154,9 @@ public class Gui {
             SwingWorker<Boolean, Void> swingWorker = new SwingWorker<Boolean, Void>() {
                 @Override
                 public Boolean doInBackground() {
-                    ClientController.setClient(MClient.get(inputUri.getText()));
-
-                    MongoIterable<String> dbList = ClientController.getClient().listDatabaseNames();
-
-                    List<String> allDatabases = new ArrayList<>();
-                    for (String db : dbList)
-                        allDatabases.add(db);
-
-                    databasesPanel.updateDatabases(allDatabases);
+                    ClientController.setClient(inputUri.getText());
+                    DataController.updateDatabases(ClientController.getServerDatabases());
+                    databasesPanel.updateListUi();
                     return true;
                 }
 
@@ -143,6 +174,8 @@ public class Gui {
 
     }
 
+    /**
+     * Initializes the graphical user interface*/
     public void init() {
         JFrame windowFrame = new JFrame("MJ");
 

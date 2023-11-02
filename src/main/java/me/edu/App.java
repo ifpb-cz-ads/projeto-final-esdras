@@ -1,6 +1,5 @@
 package me.edu;
 
-
 import me.edu.controller.ClientController;
 import me.edu.ui.Gui;
 

@@ -12,6 +12,7 @@ import javax.swing.border.Border;
 
 
 import me.edu.controller.ClientController;
+import me.edu.controller.DataController;
 import me.edu.ui.Gui;
 
 public class ConfirmDeleteDialog extends JDialog {
@@ -46,7 +47,8 @@ public class ConfirmDeleteDialog extends JDialog {
         // listener for create database
         confirmDeleteBtn.addActionListener(listener -> {
             List<String> newDbs = ClientController.deleteDatabase(dbName);
-            databasesPanel.updateDatabases(newDbs);
+            DataController.updateDatabases(newDbs);
+            databasesPanel.updateListUi();
             setVisible(false);
         });
 
