@@ -1,6 +1,7 @@
 package me.edu.database;
 
-import com.mongodb.MongoClient;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 
 public class MClient {
     private static MongoClient client = null;
@@ -10,7 +11,7 @@ public class MClient {
 
     public static MongoClient get(String uri) {
         if (client == null)
-            client = new MongoClient(uri);
+            client = MongoClients.create(uri);
 
         return client;
     }
