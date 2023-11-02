@@ -1,6 +1,10 @@
 package me.edu.ui;
 
+import me.edu.controller.ClientController;
+import me.edu.controller.DataController;
+
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -9,29 +13,18 @@ import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.SwingWorker;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 
 import com.mongodb.client.MongoIterable;
 
-import me.edu.App;
 import me.edu.components.CollectionsPanel;
 import me.edu.components.DatabasesPanel;
-import me.edu.database.MClient;
 
 public class Gui {
     private final int WINDOW_WIDTH = 800;
     private final int WINDOW_HEIGHT = 500;
-
-    // threads
 
     // colors
     public static final Color LIGHT_GRAY = new Color(242, 242, 242);
@@ -58,10 +51,21 @@ public class Gui {
     public Gui() {
     }
 
-    public void receiveData(List<String> data) {
-        databasesPanel.updateDatabases(data);
+    
+    /**
+     * Updates the databases list ui*/
+    public void updatedatabasesUi(){
+      databasesPanel.updateListUi(); 
     }
 
+    /**
+     * Updates the collections list ui*/
+    public void updateCollectionsUi(){
+      collectionsPanel.updateListUi();
+    }
+    
+    /**
+     * Create a button*/
     public static JButton createButton(String title, Font font) {
         JButton button = new JButton(title);
         button.setFont(font);
@@ -69,7 +73,9 @@ public class Gui {
 
         return button;
     }
-
+    
+    /**
+     * Creates a button*/
     public static JButton createButton(String title, Font font, Color background, Color foreground) {
         JButton button = createButton(title, font);
         button.setBackground(background);
@@ -78,24 +84,59 @@ public class Gui {
         return button;
     }
 
-    public void loadCollections() {
-        MongoIterable<String> collections = App.targetDatabase.listCollectionNames();
-        List<String> collsList = new ArrayList<>();
+    /**
+     * Creates a list item with a titel, a connect button and a remove button*/
+    public static JPanel createListItem(
+          String name, 
+          SwingWorker<Boolean, Void> connectWorker,
+          SwingWorker<Boolean, Void> removeWorker
+        ){
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
 
-        for (String colName : collections) {
-            collsList.add(colName);
-        }
+        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    
+        JLabel title = new JLabel(name);
 
-        System.out.println(">>> Hello World");
+        // panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
+        title.setOpaque(true);
+        title.setBackground(Gui.WHITE);
+        title.setPreferredSize(new Dimension(300, 40));
+        title.setFont(Gui.SANS_18);
 
-        collectionsPanel.updateCollections(collsList);
+        JButton removeButton = Gui.createButton("remover", Gui.SANS_14_BOLD, Gui.RED, Gui.WHITE);
+        removeButton.setMaximumSize(new Dimension(150, 40));
+
+        // asking for confirmation
+        removeButton.addActionListener(listener -> {
+            removeWorker.execute();
+        });
+
+        // create connectio button
+        JButton connectButton = Gui.createButton("conectar", Gui.SANS_14_BOLD, Gui.GREEN, Gui.WHITE);
+        connectButton.setMaximumSize(new Dimension(150, 40));
+        connectButton.addActionListener(listener -> {
+            connectWorker.execute();
+        });
+
+        Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
+        title.setBorder(padding);
+
+        panel.add(title);
+        panel.add(removeButton);
+        panel.add(connectButton);
+
+        return panel;
     }
-
+    
+    /**
+     * Set up the header panel with the URI input and the connect button*/
     private void configureHeaderPanel() {
 
         // setting up the uri input
         inputUri = new JTextField();
-        inputUri.setMaximumSize(new Dimension(700, 40));
+        inputUri.setPreferredSize(new Dimension(500, 40));
+        inputUri.setMaximumSize(new Dimension(500, 40));
         inputUri.setText("localhost:27017");
         Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
         inputUri.setBorder(padding);
@@ -113,15 +154,9 @@ public class Gui {
             SwingWorker<Boolean, Void> swingWorker = new SwingWorker<Boolean, Void>() {
                 @Override
                 public Boolean doInBackground() {
-                    App.setClient(MClient.get(inputUri.getText()));
-
-                    MongoIterable<String> dbList = App.getClient().listDatabaseNames();
-
-                    List<String> allDatabases = new ArrayList<>();
-                    for (String db : dbList)
-                        allDatabases.add(db);
-
-                    databasesPanel.updateDatabases(allDatabases);
+                    ClientController.setClient(inputUri.getText());
+                    DataController.updateDatabases(ClientController.getServerDatabases());
+                    databasesPanel.updateListUi();
                     return true;
                 }
 
@@ -129,14 +164,18 @@ public class Gui {
 
             swingWorker.execute();
         });
+        
 
         headerPanel.add(inputUri);
         headerPanel.add(connectButton);
-
+        headerPanel.setBackground(Gui.BLUE);
         headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.LINE_AXIS));
+        headerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     }
 
+    /**
+     * Initializes the graphical user interface*/
     public void init() {
         JFrame windowFrame = new JFrame("MJ");
 
@@ -148,7 +187,6 @@ public class Gui {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
 
         // creating and setting up header section
         configureHeaderPanel();
@@ -200,7 +238,6 @@ public class Gui {
 
         windowFrame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         windowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        windowFrame.setResizable(false);
         windowFrame.setVisible(true);
     }
 

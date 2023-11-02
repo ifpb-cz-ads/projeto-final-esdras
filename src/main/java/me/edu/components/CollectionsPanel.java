@@ -7,54 +7,52 @@ import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.border.Border;
+import javax.swing.*;
 
+import me.edu.controller.DataController;
 import me.edu.ui.Gui;
 
+/**
+ * Hanldes the collecitons to display it on the ui*/
 public class CollectionsPanel extends JPanel {
-    List<String> collections;
 
+    /**
+     * Constructor*/
+    public CollectionsPanel() {
+        setLayout(new GridBagLayout());
+        setPreferredSize(new Dimension(600, 40));
+
+    }
+
+    /**
+     * Creates a UI item to add to a list container*/
     public JPanel createCollectionItem(String collectionName) {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
+        SwingWorker<Boolean, Void> connectWorker = new SwingWorker<Boolean,Void>() {
+          @Override
+          protected Boolean doInBackground(){
+            System.out.println("Connect to collection");
+            return true;
+          }
+        };
 
-        JLabel titleLabel = new JLabel(collectionName);
-        titleLabel.setOpaque(true);
-        titleLabel.setMaximumSize(new Dimension(500, 40));
-        titleLabel.setFont(Gui.SANS_18);
-        titleLabel.setBackground(Gui.WHITE);
-
-        JButton removeButton = Gui.createButton("remover", Gui.SANS_14_BOLD, Gui.RED, Gui.WHITE);
-        removeButton.setMaximumSize(new Dimension(150, 40));
-
-        JButton connectButton = Gui.createButton("conectar", Gui.SANS_14_BOLD, Gui.GREEN, Gui.WHITE);
-        connectButton.setMaximumSize(new Dimension(150, 40));
-
-        Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
-        titleLabel.setBorder(padding);
-
-        panel.add(titleLabel);
-        panel.add(removeButton);
-        panel.add(connectButton);
-
+        SwingWorker<Boolean, Void> removeWorker = new SwingWorker<Boolean,Void>() {
+          @Override
+          public Boolean doInBackground(){
+              System.out.println("Remove collection");
+              return true;
+          }
+        };
+    
+        JPanel panel = Gui.createListItem(collectionName, connectWorker, removeWorker);
         return panel;
     }
 
-    public CollectionsPanel() {
-        this.collections = new ArrayList<>();
+    /**
+     * Updates the ui with the collections set*/
+    public void updateListUi() {
+        //updating height based on the number of databasese
+        setPreferredSize(new Dimension(600, DataController.getCollections().size() * 150));
 
-        setOpaque(true);
-        setLayout(new GridBagLayout());
-
-        updateCollectionsUI();
-    }
-
-    public void updateCollectionsUI() {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(4, 4, 4, 4);
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -68,7 +66,7 @@ public class CollectionsPanel extends JPanel {
         add(titleLabel, gbc);
 
         int i = 1;
-        for (String collection : collections) {
+        for (String collection : DataController.getCollections()) {
             gbc.gridy = i++;
             add(createCollectionItem(collection), gbc);
 
@@ -77,10 +75,4 @@ public class CollectionsPanel extends JPanel {
         revalidate();
     }
 
-    public void updateCollections(List<String> collections) {
-        this.collections = new ArrayList<>();
-        this.collections.addAll(collections);
-
-        updateCollectionsUI();
-    }
 }
