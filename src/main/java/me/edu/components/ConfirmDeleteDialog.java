@@ -10,9 +10,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
-import com.mongodb.client.MongoDatabase;
 
-import me.edu.App;
+import me.edu.controller.ClientController;
 import me.edu.ui.Gui;
 
 public class ConfirmDeleteDialog extends JDialog {
@@ -46,7 +45,7 @@ public class ConfirmDeleteDialog extends JDialog {
 
         // listener for create database
         confirmDeleteBtn.addActionListener(listener -> {
-            List<String> newDbs = App.deleteDatabase(dbName);
+            List<String> newDbs = ClientController.deleteDatabase(dbName);
             databasesPanel.updateDatabases(newDbs);
             setVisible(false);
         });

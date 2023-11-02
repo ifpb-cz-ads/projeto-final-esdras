@@ -1,5 +1,7 @@
 package me.edu.ui;
 
+import me.edu.controller.ClientController;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -23,7 +25,6 @@ import javax.swing.plaf.basic.BasicScrollBarUI;
 
 import com.mongodb.client.MongoIterable;
 
-import me.edu.App;
 import me.edu.components.CollectionsPanel;
 import me.edu.components.DatabasesPanel;
 import me.edu.database.MClient;
@@ -80,10 +81,13 @@ public class Gui {
     }
 
     public void loadCollections() {
-        MongoIterable<String> collections = App.targetDatabase.listCollectionNames();
+        MongoIterable<String> collections = ClientController.targetDatabase.listCollectionNames();
         List<String> collsList = new ArrayList<>();
 
+        System.out.println("\n\n\tCollections exists " + collections.iterator().hasNext() + "\n\n");
+
         for (String colName : collections) {
+            System.out.println("\n\n\t>>>>> " + colName + "\n\n");
             collsList.add(colName);
         }
 
@@ -113,9 +117,9 @@ public class Gui {
             SwingWorker<Boolean, Void> swingWorker = new SwingWorker<Boolean, Void>() {
                 @Override
                 public Boolean doInBackground() {
-                    App.setClient(MClient.get(inputUri.getText()));
+                    ClientController.setClient(MClient.get(inputUri.getText()));
 
-                    MongoIterable<String> dbList = App.getClient().listDatabaseNames();
+                    MongoIterable<String> dbList = ClientController.getClient().listDatabaseNames();
 
                     List<String> allDatabases = new ArrayList<>();
                     for (String db : dbList)

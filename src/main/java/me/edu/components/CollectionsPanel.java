@@ -19,6 +19,15 @@ import me.edu.ui.Gui;
 public class CollectionsPanel extends JPanel {
     List<String> collections;
 
+
+    public CollectionsPanel() {
+        this.collections = new ArrayList<>();
+
+        setOpaque(true);
+        setLayout(new GridBagLayout());
+
+    }
+
     public JPanel createCollectionItem(String collectionName) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
@@ -44,14 +53,6 @@ public class CollectionsPanel extends JPanel {
         panel.add(connectButton);
 
         return panel;
-    }
-
-    public CollectionsPanel() {
-        this.collections = new ArrayList<>();
-
-        setOpaque(true);
-        setLayout(new GridBagLayout());
-
     }
 
     public void updateCollectionsUI() {

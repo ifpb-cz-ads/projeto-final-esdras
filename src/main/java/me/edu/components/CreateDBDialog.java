@@ -12,7 +12,7 @@ import javax.swing.border.Border;
 
 import com.mongodb.client.MongoDatabase;
 
-import me.edu.App;
+import me.edu.controller.ClientController;
 import me.edu.ui.Gui;
 
 public class CreateDBDialog extends JDialog {
@@ -48,7 +48,7 @@ public class CreateDBDialog extends JDialog {
 
         // listener for create database
         confirmCreateBtn.addActionListener(listener -> {
-            MongoDatabase md = App.createDatabase(titleField.getText());
+            MongoDatabase md = ClientController.createDatabase(titleField.getText());
 
             if (md != null) {
                 databasesPanel.addDatabase(md.getName());

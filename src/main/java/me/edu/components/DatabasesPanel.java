@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingWorker;
 import javax.swing.border.Border;
 
-import me.edu.App;
+import me.edu.controller.ClientController;
 import me.edu.ui.Gui;
 
 public class DatabasesPanel extends JPanel {
@@ -87,7 +87,8 @@ public class DatabasesPanel extends JPanel {
             SwingWorker<Boolean, Void> swingWorker = new SwingWorker<Boolean, Void>() {
                 @Override
                 public Boolean doInBackground() {
-                    App.connectToDatabase(name);
+                    System.out.println("\n\n\tClicked!\n\n");
+                    ClientController.connectToDatabase(name);
                     return true;
                 }
             };
