@@ -5,10 +5,17 @@ import java.util.ArrayList;
 
 import org.bson.Document;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
+import com.mongodb.client.MongoCollection;
 import me.edu.ui.Gui;
 
 
@@ -18,6 +25,8 @@ import me.edu.ui.Gui;
 public class ClientController {
     public static MongoClient client = null;
     public static MongoDatabase targetDatabase = null;
+    private static String targetJson = "";
+    public static MongoCollection<Document> targetCollection = null; 
     public static Gui gui;
 
     /**
@@ -34,6 +43,50 @@ public class ClientController {
             allDatabases.add(db);
         
         return allDatabases;
+    }
+
+    public static void getServerDocuments(){
+      if(targetCollection != null){
+        System.out.println("\n\n\tDocuments: " + targetCollection.find());
+      }
+    }
+
+    public static String prettifyJson(String uglyJson){
+      String prettyJson = "";
+      try{
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT); // Enable pretty printing
+
+        // Create ObjectWriter with desired indentation
+        ObjectWriter writer = objectMapper.writerWithDefaultPrettyPrinter();
+
+        // Prettify JSON
+        prettyJson = writer.writeValueAsString(objectMapper.readTree(uglyJson));
+
+      }catch(JsonProcessingException e){
+        System.out.println(e);
+      }
+
+      return prettyJson;
+    }
+
+    public static String getJsonDocuments(){
+        FindIterable<Document> documents = targetCollection.find();
+        
+        for(Document doc : documents){
+            targetJson += prettifyJson(doc.toJson());
+        }
+
+        return targetJson;
+    }
+
+    public static void setTargetCollection(String collectionName){
+      if(targetDatabase != null){
+        targetCollection = targetDatabase.getCollection(collectionName);
+
+        gui.updateDocumentsUi();
+      }
     }
 
     /**

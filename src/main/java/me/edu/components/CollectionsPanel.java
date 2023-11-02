@@ -4,11 +4,10 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.*;
 
+import me.edu.controller.ClientController;
 import me.edu.controller.DataController;
 import me.edu.ui.Gui;
 
@@ -30,7 +29,7 @@ public class CollectionsPanel extends JPanel {
         SwingWorker<Boolean, Void> connectWorker = new SwingWorker<Boolean,Void>() {
           @Override
           protected Boolean doInBackground(){
-            System.out.println("Connect to collection");
+            ClientController.setTargetCollection(collectionName);
             return true;
           }
         };
