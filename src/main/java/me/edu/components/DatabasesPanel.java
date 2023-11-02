@@ -1,14 +1,11 @@
 package me.edu.components;
 
-import java.awt.BorderLayout;
-import java.awt.Dialog;
+import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -31,8 +28,8 @@ public class DatabasesPanel extends JPanel {
     public DatabasesPanel() {
 
         // setting up panel
-        setOpaque(true);
         setLayout(new GridBagLayout());
+        setPreferredSize(new Dimension(600, 0));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(4, 4, 4, 4);
@@ -64,12 +61,15 @@ public class DatabasesPanel extends JPanel {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
 
+        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    
+
         JLabel title = new JLabel(name);
 
         // panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
         title.setOpaque(true);
         title.setBackground(Gui.WHITE);
-        title.setMaximumSize(new Dimension(500, 40));
+        title.setMaximumSize(new Dimension(400, 40));
         title.setFont(Gui.SANS_18);
 
         JButton removeButton = Gui.createButton("remover", Gui.SANS_14_BOLD, Gui.RED, Gui.WHITE);
@@ -106,6 +106,8 @@ public class DatabasesPanel extends JPanel {
     }
 
     private void updateDatabasesListUI() {
+        //updating height based on the number of databasese
+        setPreferredSize(new Dimension(600, databases.size() * 150));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(4, 4, 4, 4);
@@ -134,6 +136,7 @@ public class DatabasesPanel extends JPanel {
 
         gbc.fill = GridBagConstraints.NONE;
         JButton createDbButton = Gui.createButton("criar db", Gui.SANS_18, Gui.DARK_BLUE, Gui.WHITE);
+        createDbButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(createDbButton, gbc);
 
         createDbButton.addActionListener(listener -> {

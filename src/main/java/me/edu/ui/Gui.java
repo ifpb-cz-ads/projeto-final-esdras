@@ -1,6 +1,7 @@
 package me.edu.ui;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -86,8 +87,6 @@ public class Gui {
             collsList.add(colName);
         }
 
-        System.out.println(">>> Hello World");
-
         collectionsPanel.updateCollections(collsList);
     }
 
@@ -95,7 +94,8 @@ public class Gui {
 
         // setting up the uri input
         inputUri = new JTextField();
-        inputUri.setMaximumSize(new Dimension(700, 40));
+        inputUri.setPreferredSize(new Dimension(500, 40));
+        inputUri.setMaximumSize(new Dimension(500, 40));
         inputUri.setText("localhost:27017");
         Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
         inputUri.setBorder(padding);
@@ -129,11 +129,13 @@ public class Gui {
 
             swingWorker.execute();
         });
+        
 
         headerPanel.add(inputUri);
         headerPanel.add(connectButton);
-
+        headerPanel.setBackground(Gui.BLUE);
         headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.LINE_AXIS));
+        headerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     }
 
@@ -148,7 +150,6 @@ public class Gui {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
 
         // creating and setting up header section
         configureHeaderPanel();
@@ -200,7 +201,6 @@ public class Gui {
 
         windowFrame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         windowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        windowFrame.setResizable(false);
         windowFrame.setVisible(true);
     }
 

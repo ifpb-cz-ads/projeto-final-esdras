@@ -22,12 +22,13 @@ public class CollectionsPanel extends JPanel {
     public JPanel createCollectionItem(String collectionName) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
+        panel.setPreferredSize(new Dimension(600, 50));
 
         JLabel titleLabel = new JLabel(collectionName);
         titleLabel.setOpaque(true);
-        titleLabel.setMaximumSize(new Dimension(500, 40));
         titleLabel.setFont(Gui.SANS_18);
         titleLabel.setBackground(Gui.WHITE);
+        titleLabel.setMaximumSize(new Dimension(300, 40));
 
         JButton removeButton = Gui.createButton("remover", Gui.SANS_14_BOLD, Gui.RED, Gui.WHITE);
         removeButton.setMaximumSize(new Dimension(150, 40));
