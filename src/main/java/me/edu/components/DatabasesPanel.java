@@ -30,8 +30,6 @@ public class DatabasesPanel extends JPanel {
         setPreferredSize(new Dimension(600, 0));
     }
 
-
-
     private JPanel createDbItem(String name) {
 
         SwingWorker<Boolean, Void> removeWorker = new SwingWorker<Boolean,Void>() {

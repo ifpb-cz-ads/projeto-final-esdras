@@ -4,11 +4,10 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.*;
 
+import me.edu.controller.ClientController;
 import me.edu.controller.DataController;
 import me.edu.ui.Gui;
 
@@ -30,7 +29,7 @@ public class CollectionsPanel extends JPanel {
         SwingWorker<Boolean, Void> connectWorker = new SwingWorker<Boolean,Void>() {
           @Override
           protected Boolean doInBackground(){
-            System.out.println("Connect to collection");
+            ClientController.setTargetCollection(collectionName);
             return true;
           }
         };
@@ -50,13 +49,13 @@ public class CollectionsPanel extends JPanel {
     /**
      * Updates the ui with the collections set*/
     public void updateListUi() {
+        removeAll();
         //updating height based on the number of databasese
         setPreferredSize(new Dimension(600, DataController.getCollections().size() * 150));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(4, 4, 4, 4);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.weightx = 1.0;
         gbc.weightx = 1.0;
         gbc.gridx = 0;
 

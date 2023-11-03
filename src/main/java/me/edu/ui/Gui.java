@@ -10,17 +10,15 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 
-import com.mongodb.client.MongoIterable;
 
 import me.edu.components.CollectionsPanel;
 import me.edu.components.DatabasesPanel;
+import me.edu.components.DocumentsPanel;
 
 public class Gui {
     private final int WINDOW_WIDTH = 800;
@@ -43,6 +41,7 @@ public class Gui {
     // panels
     DatabasesPanel databasesPanel = new DatabasesPanel();
     CollectionsPanel collectionsPanel = new CollectionsPanel();
+    DocumentsPanel documentsPanel = new DocumentsPanel();
     JPanel headerPanel = new JPanel();
 
     // elements
@@ -62,6 +61,10 @@ public class Gui {
      * Updates the collections list ui*/
     public void updateCollectionsUi(){
       collectionsPanel.updateListUi();
+    }
+
+    public void updateDocumentsUi(){
+      documentsPanel.updateDocumentsUi();
     }
     
     /**
@@ -184,7 +187,7 @@ public class Gui {
 
         GridBagConstraints gbc = new GridBagConstraints();
 
-        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.insets = new Insets(5, 5, 5, 10);
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
 
@@ -200,6 +203,9 @@ public class Gui {
         // creating and setting up query tool section
         gbc.gridy = 2;
         mainPanel.add(collectionsPanel, gbc);
+
+        gbc.gridy = 3;
+        mainPanel.add(documentsPanel, gbc);
 
         // Create a JScrollPane to make the window scrollable
         JScrollPane scrollPane = new JScrollPane(mainPanel);
