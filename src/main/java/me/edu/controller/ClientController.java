@@ -61,8 +61,9 @@ public class ClientController {
             //update specific document
             if(!newStringJson.isEmpty() || !newStringJson.isBlank()){
 
-                if(newStringJson.contains("**")){//document was marked to be removed
-                    Document doc = Document.parse(newStringJson.replace("**", ""));
+
+                if(newStringJson.charAt(0) == '*'){//document was marked to be removed
+                    Document doc = Document.parse(newStringJson.replace("*", ""));
                     targetCollection.deleteOne(eq("_id", doc.get("_id")));
 
                 } else {
@@ -142,11 +143,9 @@ public class ClientController {
 
         //getting the right documents
         if(filterKey == null || filterValue == null){
-            System.out.println("\n\n\tnot filters");
             documents = targetCollection.find();
         }
         else{
-            System.out.println("\n\n\tthere is filter");
             documents = targetCollection.find(eq(filterKey, filterValue));
         }
 
