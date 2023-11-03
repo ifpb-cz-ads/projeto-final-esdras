@@ -39,6 +39,12 @@ public class DocumentsPanel extends JPanel {
     filterButton.setBackground(Gui.DARK_BLUE);
     filterButton.setPreferredSize(new Dimension(100, 30));
 
+    filterButton.addActionListener(l -> {
+      ClientController.filterKey = keyInput.getText().isBlank() || keyInput.getText().isEmpty() ? null : keyInput.getText();
+      ClientController.filterValue = valueInput.getText().isBlank() || valueInput.getText().isEmpty() ? null : valueInput.getText();
+      updateDocumentsUi();
+    });
+
     panel.add(keyInput);
     panel.add(valueInput);
     panel.add(filterButton);
@@ -50,8 +56,18 @@ public class DocumentsPanel extends JPanel {
     removeAll();
     setPreferredSize(new Dimension(600, 600));
     
-    JLabel label = new JLabel("Filtro");
+    JLabel label = new JLabel("Doc Tool");
     label.setFont(Gui.SANS_18);
+
+    JLabel filteredLabel = new JLabel(
+            ClientController.filterKey != null && ClientController.filterValue != null ?
+                    "Filtrado" :
+                    "Geral"
+    );
+    filteredLabel.setFont(Gui.SANS_18);
+    filteredLabel.setForeground(ClientController.filterKey != null && ClientController.filterValue != null ?
+            Gui.BLUE :
+            Gui.DARK_BLUE);
 
     JTextArea textArea = new JTextArea();
     textArea.setText(ClientController.getJsonDocuments());
@@ -74,13 +90,16 @@ public class DocumentsPanel extends JPanel {
     add(label, gbc);
 
     gbc.gridy = 1;
+    add(filteredLabel, gbc);
+
+    gbc.gridy = 2;
     add(createFilterPanel(), gbc);
 
     JScrollPane scrollArea = new JScrollPane(textArea);
     scrollArea.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
     scrollArea.setPreferredSize(new Dimension(600, 300));
 
-    gbc.gridy = 2;
+    gbc.gridy = 3;
     add(scrollArea, gbc);
     
     JButton saveButton = Gui.createButton("Salvar", Gui.SANS_14, Gui.DARK_BLUE, Gui.WHITE);
@@ -99,7 +118,7 @@ public class DocumentsPanel extends JPanel {
         swingWorker.execute();
     });
     
-    gbc.gridy = 3;
+    gbc.gridy = 4;
     add(saveButton, gbc);
 
     revalidate();

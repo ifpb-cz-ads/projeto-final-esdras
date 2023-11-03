@@ -37,13 +37,19 @@ public class ClientController {
     public static MongoClient client = null;
     public static MongoDatabase targetDatabase = null;
     private static String targetJson = "";
-    public static MongoCollection<Document> targetCollection = null; 
+    public static MongoCollection<Document> targetCollection = null;
+    public static String filterKey = null;
+    public static String filterValue = null;
     public static Gui gui;
 
     /**
      * Sets the client (singleton)*/
     public static void setClient(String uri) {
         client = client == null ? MongoClients.create(uri) : client;
+    }
+
+    public static void getSpecifDocument(String key, String value){
+        FindIterable<Document> doc = targetCollection.find(eq(key, value));
     }
 
     public static void updateServerCollection(String newStringJson){
@@ -118,7 +124,18 @@ public class ClientController {
 
     public static String getJsonDocuments(){
         targetJson = "";
-        FindIterable<Document> documents = targetCollection.find();
+        FindIterable<Document> documents;
+
+        //getting the right documents
+        if(filterKey == null || filterValue == null){
+            System.out.println("\n\n\tnot filters");
+            documents = targetCollection.find();
+        }
+        else{
+            System.out.println("\n\n\tthere is filter");
+            documents = targetCollection.find(eq(filterKey, filterValue));
+        }
+
         
         for(Document doc : documents){
             targetJson += prettifyJson(doc.toJson()) + ",,";
@@ -126,6 +143,7 @@ public class ClientController {
 
         return targetJson;
     }
+
 
     public static void setTargetCollection(String collectionName){
       if(targetDatabase != null){
@@ -147,7 +165,7 @@ public class ClientController {
     /**
      * Creates a new database if the client is not null*/
     public static MongoDatabase createDatabase(String databaseName) {
-        if (client != null && databaseName.length() > 0) {
+        if (client != null && !databaseName.isEmpty()) {
             MongoDatabase db = client.getDatabase(databaseName);
             db.getCollection("test").insertOne(new Document("createdBy", "esdrasSilva"));
             
@@ -156,7 +174,6 @@ public class ClientController {
 
             return db;
         }
-
         return null;
     }
 
