@@ -6,7 +6,6 @@ import javax.swing.*;
 import javax.swing.border.Border;
 
 import me.edu.controller.ClientController;
-import me.edu.controller.DataController;
 import me.edu.ui.Gui;
 
 public class DocumentsPanel extends JPanel {
@@ -68,7 +67,6 @@ public class DocumentsPanel extends JPanel {
     gbc.fill = GridBagConstraints.HORIZONTAL;
     gbc.weightx = 1.0;
     gbc.anchor = GridBagConstraints.LINE_START;
-    gbc.fill = GridBagConstraints.HORIZONTAL;
     gbc.gridwidth = 1;
 
     gbc.gridy = 0;
@@ -83,6 +81,25 @@ public class DocumentsPanel extends JPanel {
 
     gbc.gridy = 2;
     add(scrollArea, gbc);
+    
+    JButton saveButton = Gui.createButton("Salvar", Gui.SANS_14, Gui.DARK_BLUE, Gui.WHITE);
+    saveButton.setPreferredSize(new Dimension(100, 40));
+
+    //worker to update collection
+    SwingWorker<Boolean, Void> swingWorker = new SwingWorker<Boolean, Void>() {
+      @Override
+      protected Boolean doInBackground() throws Exception {
+        ClientController.updateServerCollection(textArea.getText());
+        return true;
+      }
+    };
+
+    saveButton.addActionListener(l -> {
+        swingWorker.execute();
+    });
+    
+    gbc.gridy = 3;
+    add(saveButton, gbc);
 
     revalidate();
   }

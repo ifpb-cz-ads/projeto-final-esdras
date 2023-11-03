@@ -3,6 +3,13 @@ package me.edu.controller;
 import java.util.List;
 import java.util.ArrayList;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.mongodb.client.model.ReplaceOptions;
+import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.result.UpdateResult;
 import org.bson.Document;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,6 +24,9 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
 import com.mongodb.client.MongoCollection;
 import me.edu.ui.Gui;
+import org.bson.conversions.Bson;
+
+import static com.mongodb.client.model.Filters.eq;
 
 
 /**
@@ -32,8 +42,32 @@ public class ClientController {
     /**
      * Sets the client (singleton)*/
     public static void setClient(String uri) {
-        
         client = client == null ? MongoClients.create(uri) : client;
+    }
+
+    public static void updateServerCollection(String newStringJson){
+        // Parse the JSON string into a list of documents
+        String[] documentStrings = newStringJson.split(",,");
+
+
+        for(String docString : documentStrings){
+            Document document = Document.parse(docString);
+            System.out.println("\n\n\t>>> " + document);
+
+            Object documentId = document.get("_id");
+
+            //the query itself
+            Bson query = eq("_id", documentId);
+
+            document.remove("_id");
+
+            ReplaceOptions opts = new ReplaceOptions().upsert(true);
+
+            UpdateResult result = targetCollection.replaceOne(query, document, opts);
+            System.out.println("\n\n\tResult: " + result);
+
+
+        }
     }
 
     public static List<String> getServerDatabases(){
@@ -52,30 +86,18 @@ public class ClientController {
     }
 
     public static String prettifyJson(String uglyJson){
-      String prettyJson = "";
-      try{
+        JsonParser parser = new JsonParser();
+        JsonObject json = parser.parse(uglyJson).getAsJsonObject();
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT); // Enable pretty printing
-
-        // Create ObjectWriter with desired indentation
-        ObjectWriter writer = objectMapper.writerWithDefaultPrettyPrinter();
-
-        // Prettify JSON
-        prettyJson = writer.writeValueAsString(objectMapper.readTree(uglyJson));
-
-      }catch(JsonProcessingException e){
-        System.out.println(e);
-      }
-
-      return prettyJson;
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        return gson.toJson(json);
     }
 
     public static String getJsonDocuments(){
         FindIterable<Document> documents = targetCollection.find();
         
         for(Document doc : documents){
-            targetJson += prettifyJson(doc.toJson());
+            targetJson += prettifyJson(doc.toJson()) + ",,";
         }
 
         return targetJson;
