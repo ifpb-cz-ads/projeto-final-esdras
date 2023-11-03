@@ -48,68 +48,82 @@ public class ClientController {
         client = client == null ? MongoClients.create(uri) : client;
     }
 
-    public static void getSpecifDocument(String key, String value){
+    public static void getSpecifDocum111ent(String key, String value){
         FindIterable<Document> doc = targetCollection.find(eq(key, value));
     }
 
+
+    /**
+     * Updates the collection with the new json*/
     public static void updateServerCollection(String newStringJson){
 
-        // Parse the JSON string into a list of documents
-        String[] documentStrings = newStringJson.split(",,");
+        if(filterValue != null && filterKey != null){
+            //update specific document
+            if(!newStringJson.isEmpty() || !newStringJson.isBlank()){
 
-        List<Document> allDocuments = new ArrayList<>();
-        for(String docString : documentStrings){
-            allDocuments.add(Document.parse(docString));
-        }
+                if(newStringJson.contains("**")){//document was marked to be removed
+                    Document doc = Document.parse(newStringJson.replace("**", ""));
+                    targetCollection.deleteOne(eq("_id", doc.get("_id")));
 
-        //comparing with preview state to remove excluded documents
-        if(targetCollection.countDocuments() > allDocuments.size()){//document was removed
-
-            for(Document doc : targetCollection.find()){
-                boolean found = false;
-
-                for(Document nDoc : allDocuments){
-                    if(doc.get("_id").toString().equals(nDoc.get("_id").toString()))
-                        found = true;
+                } else {
+                    Document doc = Document.parse(newStringJson.replace(",,", ""));
+                    targetCollection.replaceOne(eq("_id", doc.get("_id")), doc, new ReplaceOptions().upsert(true));
                 }
 
-                if(!found){
-                    Bson query = eq("_id", doc.get("_id"));
-                    targetCollection.deleteOne(query);
+
+            }
+
+        } else {
+            // Parse the JSON string into a list of documents
+            String[] documentStrings = newStringJson.split(",,");
+
+            List<Document> allDocuments = new ArrayList<>();
+            for(String docString : documentStrings){
+                allDocuments.add(Document.parse(docString));
+            }
+
+            //comparing with preview state to remove excluded documents
+            if(targetCollection.countDocuments() > allDocuments.size()){//document was removed
+
+                //finding the missing document to remove
+                for(Document doc : targetCollection.find()){
+                    boolean found = false;
+
+                    for(Document nDoc : allDocuments){
+                        if(doc.get("_id").toString().equals(nDoc.get("_id").toString()))
+                            found = true;
+                    }
+
+                    if(!found){ //means it is the missing document
+                        Bson query = eq("_id", doc.get("_id"));
+                        targetCollection.deleteOne(query);
+                    }
+                }
+
+            } else if(targetCollection.countDocuments() < allDocuments.size()){//document was added
+                for(Document doc : allDocuments){
+
+                    if(doc.get("_id") == null){
+                        targetCollection.insertOne(doc);
+                    }
                 }
             }
 
-        } else if(targetCollection.countDocuments() < allDocuments.size()){//document was added
-            for(Document doc : allDocuments){
-                boolean found = false;
+            //updating all documents
+            for(Document document : allDocuments){
 
-                System.out.println("\n\n\tDoc" + doc.get("_id"));
+                Object documentId = document.get("_id");
 
+                //the query itself
+                Bson query = eq("_id", documentId);
 
-                if(doc.get("_id") == null){
-                    targetCollection.insertOne(doc);
-                    System.out.println("\n\n\tDocument created!");
-                }
+                document.remove("_id");
+
+                ReplaceOptions opts = new ReplaceOptions().upsert(true);
+                UpdateResult result = targetCollection.replaceOne(query, document, opts);
             }
         }
 
-        //updating all documents
-        for(Document document : allDocuments){
-
-            Object documentId = document.get("_id");
-
-            //the query itself
-            Bson query = eq("_id", documentId);
-
-            document.remove("_id");
-
-            ReplaceOptions opts = new ReplaceOptions().upsert(true);
-
-            UpdateResult result = targetCollection.replaceOne(query, document, opts);
-            System.out.println("\n\n\tResult: " + result);
-
-
-        }
 
         gui.updateDocumentsUi();
     }
