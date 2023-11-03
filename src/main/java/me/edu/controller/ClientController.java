@@ -26,6 +26,7 @@ import com.mongodb.client.MongoCollection;
 import me.edu.ui.Gui;
 import org.bson.conversions.Bson;
 
+import static com.mongodb.client.model.Filters.all;
 import static com.mongodb.client.model.Filters.eq;
 
 
@@ -46,13 +47,48 @@ public class ClientController {
     }
 
     public static void updateServerCollection(String newStringJson){
+
         // Parse the JSON string into a list of documents
         String[] documentStrings = newStringJson.split(",,");
 
-
+        List<Document> allDocuments = new ArrayList<>();
         for(String docString : documentStrings){
-            Document document = Document.parse(docString);
-            System.out.println("\n\n\t>>> " + document);
+            allDocuments.add(Document.parse(docString));
+        }
+
+        //comparing with preview state to remove excluded documents
+        if(targetCollection.countDocuments() > allDocuments.size()){//document was removed
+
+            for(Document doc : targetCollection.find()){
+                boolean found = false;
+
+                for(Document nDoc : allDocuments){
+                    if(doc.get("_id").toString().equals(nDoc.get("_id").toString()))
+                        found = true;
+                }
+
+                if(!found){
+                    Bson query = eq("_id", doc.get("_id"));
+                    targetCollection.deleteOne(query);
+                }
+            }
+
+        } else if(targetCollection.countDocuments() < allDocuments.size()){//document was added
+            for(Document doc : allDocuments){
+                boolean found = false;
+
+                System.out.println("\n\n\tDoc" + doc.get("_id"));
+
+
+                if(doc.get("_id") == null){
+                    targetCollection.insertOne(doc);
+                    System.out.println("\n\n\tDocument created!");
+                }
+            }
+        }
+
+        //updating all documents
+        for(Document document : allDocuments){
 
             Object documentId = document.get("_id");
 
@@ -68,21 +104,8 @@ public class ClientController {
 
 
         }
-    }
 
-    public static List<String> getServerDatabases(){
-        MongoIterable<String> dbList = client.listDatabaseNames(); 
-        List<String> allDatabases = new ArrayList<>();
-        for (String db : dbList)
-            allDatabases.add(db);
-        
-        return allDatabases;
-    }
-
-    public static void getServerDocuments(){
-      if(targetCollection != null){
-        System.out.println("\n\n\tDocuments: " + targetCollection.find());
-      }
+        gui.updateDocumentsUi();
     }
 
     public static String prettifyJson(String uglyJson){
@@ -94,6 +117,7 @@ public class ClientController {
     }
 
     public static String getJsonDocuments(){
+        targetJson = "";
         FindIterable<Document> documents = targetCollection.find();
         
         for(Document doc : documents){
@@ -111,10 +135,13 @@ public class ClientController {
       }
     }
 
-    /**
-     * Returns the client*/
-    public static MongoClient getClient() {
-        return client;
+    public static List<String> getServerDatabases(){
+        MongoIterable<String> dbList = client.listDatabaseNames();
+        List<String> allDatabases = new ArrayList<>();
+        for (String db : dbList)
+            allDatabases.add(db);
+
+        return allDatabases;
     }
 
     /**

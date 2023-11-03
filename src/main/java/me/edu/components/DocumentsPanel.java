@@ -47,6 +47,7 @@ public class DocumentsPanel extends JPanel {
   }
 
   public void updateDocumentsUi(){
+    removeAll();
     setPreferredSize(new Dimension(600, 600));
     
     JLabel label = new JLabel("Filtro");
