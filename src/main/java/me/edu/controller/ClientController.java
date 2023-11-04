@@ -200,9 +200,10 @@ public class ClientController {
 
             DataController.updateDatabases(stringDbs);
 
+            gui.updatedatabasesUi();
             return stringDbs;
         }
-        gui.updatedatabasesUi();
+
         return null;
     }
 

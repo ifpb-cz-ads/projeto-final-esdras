@@ -3,11 +3,7 @@ package me.edu.components;
 import java.awt.BorderLayout;
 import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.Border;
 
 
@@ -26,7 +22,7 @@ public class ConfirmDeleteDialog extends JDialog {
         setSize(400, 200);
         setResizable(false);
 
-        setTitle("Criar DB");
+        setTitle("Remover DB");
 
         JLabel titleLable = new JLabel("Tem certeza que deseja excluir o db " + dbName + "?");
 
@@ -43,7 +39,14 @@ public class ConfirmDeleteDialog extends JDialog {
 
         // listener for create database
         confirmDeleteBtn.addActionListener(listener -> {
-            ClientController.deleteDatabase(dbName);
+            new SwingWorker<Boolean, Void>(){
+                @Override
+                public Boolean doInBackground(){
+                    ClientController.deleteDatabase(dbName);
+                    return  true;
+                }
+            }.execute();
+
             setVisible(false);
         });
 

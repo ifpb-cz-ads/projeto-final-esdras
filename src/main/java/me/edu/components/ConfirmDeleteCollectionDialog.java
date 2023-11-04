@@ -17,7 +17,7 @@ public class ConfirmDeleteCollectionDialog extends JDialog {
         setSize(400, 200);
         setResizable(false);
 
-        setTitle("Criar DB");
+        setTitle("Remover coleção");
 
         JLabel titleLable = new JLabel("Tem certeza que deseja a coleção " + collectionName + "?");
 
@@ -34,7 +34,14 @@ public class ConfirmDeleteCollectionDialog extends JDialog {
 
         // listener for create database
         confirmDeleteBtn.addActionListener(listener -> {
-            ClientController.deleteCollection(collectionName);
+            new SwingWorker<Boolean, Void>(){
+                @Override
+                public Boolean doInBackground(){
+                    ClientController.deleteCollection(collectionName);
+                    return true;
+                }
+            }.execute();
+
             setVisible(false);
         });
 

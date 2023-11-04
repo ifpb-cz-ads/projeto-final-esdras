@@ -32,19 +32,19 @@ public class DatabasesPanel extends JPanel {
 
     private JPanel createDbItem(String name) {
 
-        SwingWorker<Boolean, Void> removeWorker = new SwingWorker<Boolean,Void>() {
+        SwingWorker<Void, Void> removeWorker = new SwingWorker<>() {
           @Override
-          public Boolean doInBackground(){
+          public Void doInBackground(){
               confirmDeleteDialog.askConfirm(name);
-              return true;
+              return null;
           }
         };
 
-        SwingWorker<Boolean, Void> connectWorker = new SwingWorker<Boolean, Void>() {
+        SwingWorker<Void, Void> connectWorker = new SwingWorker<>() {
           @Override
-          public Boolean doInBackground() {
+          public Void doInBackground() {
             ClientController.connectToDatabase(name);
-            return true;
+            return null;
           }
         };
 

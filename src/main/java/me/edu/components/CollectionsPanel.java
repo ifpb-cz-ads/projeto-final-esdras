@@ -28,19 +28,19 @@ public class CollectionsPanel extends JPanel {
     /**
      * Creates a UI item to add to a list container*/
     public JPanel createCollectionItem(String collectionName) {
-        SwingWorker<Boolean, Void> connectWorker = new SwingWorker<Boolean,Void>() {
+        SwingWorker<Void, Void> connectWorker = new SwingWorker<>() {
           @Override
-          protected Boolean doInBackground(){
+          protected Void doInBackground(){
             ClientController.setTargetCollection(collectionName);
-            return true;
+            return null;
           }
         };
 
-        SwingWorker<Boolean, Void> removeWorker = new SwingWorker<Boolean,Void>() {
+        SwingWorker<Void, Void> removeWorker = new SwingWorker<>() {
           @Override
-          public Boolean doInBackground(){
+          public Void doInBackground(){
               confirmDeleteCollectionDialog.askConfirm(collectionName);
-              return true;
+              return null;
           }
         };
     
@@ -53,7 +53,7 @@ public class CollectionsPanel extends JPanel {
     public void updateListUi() {
         removeAll();
         //updating height based on the number of databasese
-        setPreferredSize(new Dimension(600, DataController.getCollections().size() * 80));
+        setPreferredSize(new Dimension(600, DataController.getCollections().size() * 120));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(4, 4, 4, 4);

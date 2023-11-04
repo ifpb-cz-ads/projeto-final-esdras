@@ -29,6 +29,8 @@ public class Gui {
     private final int WINDOW_WIDTH = 800;
     private final int WINDOW_HEIGHT = 500;
 
+    private ClassLoader classLoader = App.class.getClassLoader();
+
     // colors
     public static final Color LIGHT_GRAY = new Color(242, 242, 242);
     public static final Color GREEN = new Color(20, 202, 104);
@@ -107,8 +109,8 @@ public class Gui {
      * Creates a list item with a titel, a connect button and a remove button*/
     public static JPanel createListItem(
           String name, 
-          SwingWorker<Boolean, Void> connectWorker,
-          SwingWorker<Boolean, Void> removeWorker
+          SwingWorker<Void, Void> connectWorker,
+          SwingWorker<Void, Void> removeWorker
         ){
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
@@ -136,6 +138,7 @@ public class Gui {
         // create connectio button
         JButton connectButton = Gui.createButton("conectar", Gui.SANS_14_BOLD, Gui.GREEN, Gui.WHITE, 100, 30);
         connectButton.setMaximumSize(new Dimension(150, 40));
+
         connectButton.addActionListener(listener -> {
             connectWorker.execute();
         });
@@ -170,20 +173,26 @@ public class Gui {
         connectButton.setMaximumSize(new Dimension(150, 40));
         connectButton.setFont(SANS_18);
 
+
         // adding listener
         connectButton.addActionListener(listener -> {
-            SwingWorker<Boolean, Void> swingWorker = new SwingWorker<Boolean, Void>() {
+            new SwingWorker<Boolean, Void>() {
                 @Override
                 public Boolean doInBackground() {
+                    //disabling the button
+                    connectButton.setBackground(Gui.LIGHT_GRAY);
+                    connectButton.setEnabled(false);
+
                     ClientController.setClient(inputUri.getText());
                     DataController.updateDatabases(ClientController.getServerDatabases());
                     databasesPanel.updateListUi();
+
+                    connectButton.setEnabled(true);
+                    connectButton.setBackground(Gui.BLUE);
                     return true;
                 }
 
-            };
-
-            swingWorker.execute();
+            }.execute();
         });
 
         headerPanel.add(inputUri);
@@ -208,8 +217,8 @@ public class Gui {
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
 
-        ClassLoader classLoader = App.class.getClassLoader();
         JLabel imageLabel = new JLabel(new ImageIcon(classLoader.getResource("logo-mj.png")));
+
 
         gbc.gridy = 0;
         mainPanel.add(imageLabel, gbc);
@@ -229,6 +238,7 @@ public class Gui {
 
         gbc.gridy = 4;
         mainPanel.add(documentsPanel, gbc);
+
 
         // Create a JScrollPane to make the window scrollable
         JScrollPane scrollPane = new JScrollPane(mainPanel);
