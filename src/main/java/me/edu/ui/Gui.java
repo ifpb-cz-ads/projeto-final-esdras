@@ -1,5 +1,6 @@
 package me.edu.ui;
 
+import me.edu.App;
 import me.edu.controller.ClientController;
 import me.edu.controller.DataController;
 
@@ -10,7 +11,11 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicScrollBarUI;
@@ -140,7 +145,7 @@ public class Gui {
         inputUri = new JTextField();
         inputUri.setPreferredSize(new Dimension(500, 40));
         inputUri.setMaximumSize(new Dimension(500, 40));
-        inputUri.setText("localhost:27017");
+        inputUri.setText("mongodb://localhost:27017");
         Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
         inputUri.setBorder(padding);
         inputUri.setFont(SANS_18);
@@ -191,7 +196,9 @@ public class Gui {
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
 
-        JLabel imageLabel = new JLabel(new ImageIcon("src/assets/logo-mj.png"));
+        ClassLoader classLoader = App.class.getClassLoader();
+        JLabel imageLabel = new JLabel(new ImageIcon(classLoader.getResource("logo-mj.png")));
+
         gbc.gridy = 0;
         mainPanel.add(imageLabel, gbc);
 
