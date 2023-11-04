@@ -191,20 +191,24 @@ public class Gui {
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
 
+        JLabel imageLabel = new JLabel(new ImageIcon("src/assets/logo-mj.png"));
+        gbc.gridy = 0;
+        mainPanel.add(imageLabel, gbc);
+
         // creating and setting up header section
         configureHeaderPanel();
-        gbc.gridy = 0;
+        gbc.gridy = 1;
         mainPanel.add(headerPanel, gbc);
 
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         gbc.ipady = 0;
         mainPanel.add(databasesPanel, gbc);
 
         // creating and setting up query tool section
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         mainPanel.add(collectionsPanel, gbc);
 
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         mainPanel.add(documentsPanel, gbc);
 
         // Create a JScrollPane to make the window scrollable
