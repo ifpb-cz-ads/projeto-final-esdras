@@ -1,27 +1,18 @@
 package me.edu.components;
 
-import java.awt.BorderLayout;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.border.Border;
-
 import com.mongodb.client.MongoDatabase;
-
 import me.edu.controller.ClientController;
 import me.edu.controller.DataController;
 import me.edu.ui.Gui;
 
-public class CreateDBDialog extends JDialog {
-    JTextField titleField = new JTextField();
+import javax.swing.*;
+import javax.swing.border.Border;
+import java.awt.*;
 
-    public CreateDBDialog(DatabasesPanel databasesPanel) {
+public class CreateCollectionDialog extends JDialog {
+
+    public CreateCollectionDialog(){
         super();
-
 
         // setting up dialog
         setLayout(new BorderLayout(8, 20));
@@ -32,6 +23,8 @@ public class CreateDBDialog extends JDialog {
 
         JLabel titleLable = new JLabel("Nome");
 
+        JTextField titleField = new JTextField();
+
         titleLable.setFont(Gui.SANS_18);
         titleField.setFont(Gui.SANS_18);
 
@@ -40,20 +33,23 @@ public class CreateDBDialog extends JDialog {
         JPanel dialogPanel = (JPanel) getContentPane();
         dialogPanel.setBorder(padding);
 
-        JButton confirmCreateBtn = new JButton("criar");
-        confirmCreateBtn.setBackground(Gui.DARK_BLUE);
-        confirmCreateBtn.setFont(Gui.SANS_18);
-        confirmCreateBtn.setForeground(Gui.WHITE);
+        JButton confirmCreateBtn = Gui.createButton("criar", Gui.SANS_18, Gui.DARK_BLUE, Gui.WHITE, 200, 30);
 
         // listener for create database
         confirmCreateBtn.addActionListener(listener -> {
-            ClientController.createDatabase(titleField.getText());
-            setVisible(false);
+            new SwingWorker<Boolean, Void>(){
+                @Override
+                public Boolean doInBackground(){
+                    ClientController.createCollection(titleField.getText());
+                    DataController.addCollection(titleField.getText());
+                    setVisible(false);
+                    return true;
+                }
+            }.execute();
         });
 
         add(titleLable, BorderLayout.NORTH);
         add(titleField, BorderLayout.CENTER);
         add(confirmCreateBtn, BorderLayout.SOUTH);
     }
-
 }

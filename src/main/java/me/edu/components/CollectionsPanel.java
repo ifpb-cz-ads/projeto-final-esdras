@@ -14,6 +14,8 @@ import me.edu.ui.Gui;
 /**
  * Hanldes the collecitons to display it on the ui*/
 public class CollectionsPanel extends JPanel {
+    CreateCollectionDialog createCollectionDialog = new CreateCollectionDialog();
+    ConfirmDeleteCollectionDialog confirmDeleteCollectionDialog = new ConfirmDeleteCollectionDialog();
 
     /**
      * Constructor*/
@@ -26,19 +28,19 @@ public class CollectionsPanel extends JPanel {
     /**
      * Creates a UI item to add to a list container*/
     public JPanel createCollectionItem(String collectionName) {
-        SwingWorker<Boolean, Void> connectWorker = new SwingWorker<Boolean,Void>() {
+        SwingWorker<Void, Void> connectWorker = new SwingWorker<>() {
           @Override
-          protected Boolean doInBackground(){
+          protected Void doInBackground(){
             ClientController.setTargetCollection(collectionName);
-            return true;
+            return null;
           }
         };
 
-        SwingWorker<Boolean, Void> removeWorker = new SwingWorker<Boolean,Void>() {
+        SwingWorker<Void, Void> removeWorker = new SwingWorker<>() {
           @Override
-          public Boolean doInBackground(){
-              System.out.println("Remove collection");
-              return true;
+          public Void doInBackground(){
+              confirmDeleteCollectionDialog.askConfirm(collectionName);
+              return null;
           }
         };
     
@@ -51,7 +53,7 @@ public class CollectionsPanel extends JPanel {
     public void updateListUi() {
         removeAll();
         //updating height based on the number of databasese
-        setPreferredSize(new Dimension(600, DataController.getCollections().size() * 150));
+        setPreferredSize(new Dimension(600, DataController.getCollections().size() * 120));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(4, 4, 4, 4);
@@ -70,6 +72,16 @@ public class CollectionsPanel extends JPanel {
             add(createCollectionItem(collection), gbc);
 
         }
+
+        gbc.gridy = ++i;
+        gbc.fill = GridBagConstraints.NONE;
+        JButton createCollectionButton = Gui.createButton("criar coleção", Gui.SANS_18, Gui.DARK_BLUE, Gui.WHITE, 200, 40);
+        add(createCollectionButton, gbc);
+
+
+        createCollectionButton.addActionListener(l -> {
+            createCollectionDialog.setVisible(true);
+        });
 
         revalidate();
     }

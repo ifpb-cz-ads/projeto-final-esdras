@@ -32,19 +32,19 @@ public class DatabasesPanel extends JPanel {
 
     private JPanel createDbItem(String name) {
 
-        SwingWorker<Boolean, Void> removeWorker = new SwingWorker<Boolean,Void>() {
+        SwingWorker<Void, Void> removeWorker = new SwingWorker<>() {
           @Override
-          public Boolean doInBackground(){
+          public Void doInBackground(){
               confirmDeleteDialog.askConfirm(name);
-              return true;
+              return null;
           }
         };
 
-        SwingWorker<Boolean, Void> connectWorker = new SwingWorker<Boolean, Void>() {
+        SwingWorker<Void, Void> connectWorker = new SwingWorker<>() {
           @Override
-          public Boolean doInBackground() {
+          public Void doInBackground() {
             ClientController.connectToDatabase(name);
-            return true;
+            return null;
           }
         };
 
@@ -55,12 +55,11 @@ public class DatabasesPanel extends JPanel {
 
     public void updateListUi() {
         //updating height based on the number of databasese
-        setPreferredSize(new Dimension(600, DataController.getDatabases().size() * 150));
+        setPreferredSize(new Dimension(600, DataController.getDatabases().size() * 80));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(4, 4, 4, 4);
         gbc.weightx = 1.0;
-        gbc.ipady = 40;
         gbc.anchor = GridBagConstraints.NORTH;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
@@ -83,8 +82,7 @@ public class DatabasesPanel extends JPanel {
         }
 
         gbc.fill = GridBagConstraints.NONE;
-        JButton createDbButton = Gui.createButton("criar db", Gui.SANS_18, Gui.DARK_BLUE, Gui.WHITE);
-        createDbButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JButton createDbButton = Gui.createButton("criar db", Gui.SANS_18, Gui.DARK_BLUE, Gui.WHITE, 200, 40);
         add(createDbButton, gbc);
 
         createDbButton.addActionListener(listener -> {
