@@ -1,24 +1,15 @@
 package me.edu.components;
 
-import java.awt.BorderLayout;
-import java.util.List;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.border.Border;
-
-
 import me.edu.controller.ClientController;
-import me.edu.controller.DataController;
 import me.edu.ui.Gui;
 
-public class ConfirmDeleteDialog extends JDialog {
-    private String dbName;
+import javax.swing.*;
+import javax.swing.border.Border;
+import java.awt.*;
 
-    public ConfirmDeleteDialog(DatabasesPanel databasesPanel) {
+public class ConfirmDeleteCollectionDialog extends JDialog {
+    private String collectionName = null;
+    public ConfirmDeleteCollectionDialog(){
         super();
 
         // setting up dialog
@@ -28,7 +19,7 @@ public class ConfirmDeleteDialog extends JDialog {
 
         setTitle("Criar DB");
 
-        JLabel titleLable = new JLabel("Tem certeza que deseja excluir o db " + dbName + "?");
+        JLabel titleLable = new JLabel("Tem certeza que deseja a coleção " + collectionName + "?");
 
         titleLable.setFont(Gui.SANS_18);
 
@@ -43,7 +34,7 @@ public class ConfirmDeleteDialog extends JDialog {
 
         // listener for create database
         confirmDeleteBtn.addActionListener(listener -> {
-            ClientController.deleteDatabase(dbName);
+            ClientController.deleteCollection(collectionName);
             setVisible(false);
         });
 
@@ -51,8 +42,8 @@ public class ConfirmDeleteDialog extends JDialog {
         add(confirmDeleteBtn, BorderLayout.SOUTH);
     }
 
-    public void askConfirm(String databaseName) {
-        dbName = databaseName;
+    public void askConfirm(String collectionName){
+        this.collectionName = collectionName;
         setVisible(true);
     }
 }

@@ -60,8 +60,6 @@ public class ClientController {
         if(filterValue != null && filterKey != null){
             //update specific document
             if(!newStringJson.isEmpty() || !newStringJson.isBlank()){
-
-
                 if(newStringJson.charAt(0) == '*'){//document was marked to be removed
                     Document doc = Document.parse(newStringJson.replace("*", ""));
                     targetCollection.deleteOne(eq("_id", doc.get("_id")));
@@ -70,8 +68,6 @@ public class ClientController {
                     Document doc = Document.parse(newStringJson.replace(",,", ""));
                     targetCollection.replaceOne(eq("_id", doc.get("_id")), doc, new ReplaceOptions().upsert(true));
                 }
-
-
             }
 
         } else {
@@ -124,8 +120,6 @@ public class ClientController {
                 UpdateResult result = targetCollection.replaceOne(query, document, opts);
             }
         }
-
-
         gui.updateDocumentsUi();
     }
 
@@ -148,8 +142,6 @@ public class ClientController {
         else{
             documents = targetCollection.find(eq(filterKey, filterValue));
         }
-
-        
         for(Document doc : documents){
             targetJson += prettifyJson(doc.toJson()) + ",,";
         }
@@ -181,13 +173,17 @@ public class ClientController {
         if (client != null && !databaseName.isEmpty()) {
             MongoDatabase db = client.getDatabase(databaseName);
             db.getCollection("test").insertOne(new Document("createdBy", "esdrasSilva"));
-            
             DataController.addDatabase(db.getName());
             gui.updatedatabasesUi();
-
             return db;
         }
         return null;
+    }
+
+    public static void createCollection(String collectionName){
+        targetDatabase.createCollection(collectionName);
+        DataController.addCollection(collectionName);
+        gui.updateCollectionsUi();
     }
 
     /**
@@ -202,10 +198,25 @@ public class ClientController {
             for (String dbName : dbs)
                 stringDbs.add(dbName);
 
+            DataController.updateDatabases(stringDbs);
+
             return stringDbs;
         }
-
+        gui.updatedatabasesUi();
         return null;
+    }
+
+    public static void deleteCollection(String collectionName){
+        MongoCollection<Document> collection = targetDatabase.getCollection(collectionName);
+        collection.drop();
+
+        List<String> allCollections = new ArrayList<>();
+        for(String coll : targetDatabase.listCollectionNames()){
+            allCollections.add(coll);
+        }
+
+        DataController.updateCollections(allCollections);
+        gui.updateCollectionsUi();
     }
 
     public static void loadCollections() {

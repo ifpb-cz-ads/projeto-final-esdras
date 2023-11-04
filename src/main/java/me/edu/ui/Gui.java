@@ -84,10 +84,21 @@ public class Gui {
     
     /**
      * Creates a button*/
-    public static JButton createButton(String title, Font font, Color background, Color foreground) {
+    public static JButton createButton(
+            String title,
+            Font font,
+            Color background,
+            Color foreground,
+            int width,
+            int height
+    ) {
         JButton button = createButton(title, font);
         button.setBackground(background);
         button.setForeground(foreground);
+
+        button.setPreferredSize(new Dimension(width, height));
+        button.setMaximumSize(new Dimension(width, height));
+        button.setMinimumSize(new Dimension(width, height));
 
         return button;
     }
@@ -110,9 +121,11 @@ public class Gui {
         title.setOpaque(true);
         title.setBackground(Gui.WHITE);
         title.setPreferredSize(new Dimension(300, 40));
+        title.setMaximumSize(new Dimension(300, 40));
+        title.setMinimumSize(new Dimension(300, 40));
         title.setFont(Gui.SANS_18);
 
-        JButton removeButton = Gui.createButton("remover", Gui.SANS_14_BOLD, Gui.RED, Gui.WHITE);
+        JButton removeButton = Gui.createButton("remover", Gui.SANS_14_BOLD, Gui.RED, Gui.WHITE, 100, 30);
         removeButton.setMaximumSize(new Dimension(150, 40));
 
         // asking for confirmation
@@ -121,7 +134,7 @@ public class Gui {
         });
 
         // create connectio button
-        JButton connectButton = Gui.createButton("conectar", Gui.SANS_14_BOLD, Gui.GREEN, Gui.WHITE);
+        JButton connectButton = Gui.createButton("conectar", Gui.SANS_14_BOLD, Gui.GREEN, Gui.WHITE, 100, 30);
         connectButton.setMaximumSize(new Dimension(150, 40));
         connectButton.addActionListener(listener -> {
             connectWorker.execute();
@@ -172,7 +185,6 @@ public class Gui {
 
             swingWorker.execute();
         });
-        
 
         headerPanel.add(inputUri);
         headerPanel.add(connectButton);

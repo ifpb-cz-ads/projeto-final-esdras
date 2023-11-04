@@ -102,7 +102,7 @@ public class DocumentsPanel extends JPanel {
     gbc.gridy = 3;
     add(scrollArea, gbc);
     
-    JButton saveButton = Gui.createButton("Salvar", Gui.SANS_14, Gui.DARK_BLUE, Gui.WHITE);
+    JButton saveButton = Gui.createButton("Salvar", Gui.SANS_14, Gui.DARK_BLUE, Gui.WHITE, 100, 30);
     saveButton.setPreferredSize(new Dimension(100, 40));
 
     //worker to update collection
