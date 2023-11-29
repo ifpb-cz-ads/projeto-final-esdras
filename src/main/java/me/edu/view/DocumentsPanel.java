@@ -1,4 +1,4 @@
-package me.edu.components;
+package me.edu.view;
 
 import java.awt.*;
 

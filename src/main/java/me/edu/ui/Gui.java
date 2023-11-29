@@ -11,19 +11,15 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 
 
-import me.edu.components.CollectionsPanel;
-import me.edu.components.DatabasesPanel;
-import me.edu.components.DocumentsPanel;
+import me.edu.view.CollectionsPanel;
+import me.edu.view.DatabasesPanel;
+import me.edu.view.DocumentsPanel;
 
 public class Gui {
     private final int WINDOW_WIDTH = 800;

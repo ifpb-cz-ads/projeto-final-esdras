@@ -1,14 +1,12 @@
-package me.edu.components;
+package me.edu.view;
 
 import java.awt.BorderLayout;
-import java.util.List;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 
 
 import me.edu.controller.ClientController;
-import me.edu.controller.DataController;
 import me.edu.ui.Gui;
 
 public class ConfirmDeleteDialog extends JDialog {

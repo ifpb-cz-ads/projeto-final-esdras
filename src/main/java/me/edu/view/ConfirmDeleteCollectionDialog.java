@@ -1,4 +1,4 @@
-package me.edu.components;
+package me.edu.view;
 
 import me.edu.controller.ClientController;
 import me.edu.ui.Gui;
