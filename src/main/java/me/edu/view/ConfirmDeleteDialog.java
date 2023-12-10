@@ -1,6 +1,6 @@
 package me.edu.view;
 
-import java.awt.BorderLayout;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -18,6 +18,12 @@ public class ConfirmDeleteDialog extends JDialog {
         // setting up dialog
         setLayout(new BorderLayout(8, 20));
         setSize(400, 200);
+        setBounds(
+                Toolkit.getDefaultToolkit().getScreenSize().width / 2 - 200,
+                Toolkit.getDefaultToolkit().getScreenSize().height / 2 - 100,
+                400,
+                200
+        );
         setResizable(false);
 
         setTitle("Remover DB");

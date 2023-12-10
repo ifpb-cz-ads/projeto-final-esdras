@@ -4,13 +4,7 @@ import me.edu.App;
 import me.edu.controller.ClientController;
 import me.edu.controller.DataController;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -272,6 +266,12 @@ public class Gui {
         });
 
         windowFrame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+        windowFrame.setBounds(
+                Toolkit.getDefaultToolkit().getScreenSize().width / 2 - WINDOW_WIDTH / 2,
+                Toolkit.getDefaultToolkit().getScreenSize().height / 2 - WINDOW_HEIGHT / 2,
+                WINDOW_WIDTH,
+                WINDOW_HEIGHT
+        );
         windowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         windowFrame.setVisible(true);
     }
