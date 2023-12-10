@@ -29,23 +29,25 @@ public class DatabasesPanel extends JPanel {
 
     private JPanel createDbItem(String name) {
 
-        SwingWorker<Void, Void> removeWorker = new SwingWorker<>() {
-          @Override
-          public Void doInBackground(){
-              confirmDeleteDialog.askConfirm(name);
-              return null;
-          }
-        };
-
-        SwingWorker<Void, Void> connectWorker = new SwingWorker<>() {
-          @Override
-          public Void doInBackground() {
-            ClientController.connectToDatabase(name);
-            return null;
-          }
-        };
-
-        JPanel panel = Gui.createListItem(name, connectWorker, removeWorker);
+        JPanel panel = Gui.createListItem(
+                name, () -> {
+            return new SwingWorker<>() {
+                @Override
+                public Void doInBackground() {
+                    ClientController.connectToDatabase(name);
+                    return null;
+                }
+            };
+        },
+                () -> {
+            return new SwingWorker<>() {
+                @Override
+                public Void doInBackground(){
+                    confirmDeleteDialog.askConfirm(name);
+                    return null;
+                }
+            };
+        });
 
         return panel;
     }

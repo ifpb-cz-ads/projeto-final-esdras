@@ -28,23 +28,21 @@ public class CollectionsPanel extends JPanel {
     /**
      * Creates a UI item to add to a list container*/
     public JPanel createCollectionItem(String collectionName) {
-        SwingWorker<Void, Void> connectWorker = new SwingWorker<>() {
-          @Override
-          protected Void doInBackground(){
-            ClientController.setTargetCollection(collectionName);
-            return null;
-          }
-        };
 
-        SwingWorker<Void, Void> removeWorker = new SwingWorker<>() {
-          @Override
-          public Void doInBackground(){
-              confirmDeleteCollectionDialog.askConfirm(collectionName);
-              return null;
-          }
-        };
     
-        JPanel panel = Gui.createListItem(collectionName, connectWorker, removeWorker);
+        JPanel panel = Gui.createListItem(collectionName, () -> {return new SwingWorker<>() {
+            @Override
+            protected Void doInBackground(){
+                ClientController.setTargetCollection(collectionName);
+                return null;
+            }
+        };}, () -> {return new SwingWorker<>() {
+            @Override
+            public Void doInBackground(){
+                confirmDeleteCollectionDialog.askConfirm(collectionName);
+                return null;
+            }
+        };});
         return panel;
     }
 

@@ -1,6 +1,6 @@
 package me.edu.view;
 
-import java.awt.BorderLayout;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -10,7 +10,8 @@ import me.edu.controller.ClientController;
 import me.edu.ui.Gui;
 
 public class ConfirmDeleteDialog extends JDialog {
-    private String dbName;
+    private String dbName = null;
+    JLabel titleLable = new JLabel();
 
     public ConfirmDeleteDialog(DatabasesPanel databasesPanel) {
         super();
@@ -18,11 +19,16 @@ public class ConfirmDeleteDialog extends JDialog {
         // setting up dialog
         setLayout(new BorderLayout(8, 20));
         setSize(400, 200);
+        setBounds(
+                Toolkit.getDefaultToolkit().getScreenSize().width / 2 - 200,
+                Toolkit.getDefaultToolkit().getScreenSize().height / 2 - 100,
+                400,
+                200
+        );
         setResizable(false);
 
         setTitle("Remover DB");
 
-        JLabel titleLable = new JLabel("Tem certeza que deseja excluir o db " + dbName + "?");
 
         titleLable.setFont(Gui.SANS_18);
 
@@ -53,7 +59,7 @@ public class ConfirmDeleteDialog extends JDialog {
     }
 
     public void askConfirm(String databaseName) {
-        dbName = databaseName;
+        titleLable.setText("Quer mesmo excluir: " + databaseName + "?");
         setVisible(true);
     }
 }

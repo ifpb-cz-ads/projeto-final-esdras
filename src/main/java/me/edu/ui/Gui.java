@@ -4,19 +4,14 @@ import me.edu.App;
 import me.edu.controller.ClientController;
 import me.edu.controller.DataController;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 
 
+import me.edu.utils.GetWorker;
 import me.edu.view.CollectionsPanel;
 import me.edu.view.DatabasesPanel;
 import me.edu.view.DocumentsPanel;
@@ -105,8 +100,8 @@ public class Gui {
      * Creates a list item with a titel, a connect button and a remove button*/
     public static JPanel createListItem(
           String name, 
-          SwingWorker<Void, Void> connectWorker,
-          SwingWorker<Void, Void> removeWorker
+          GetWorker getConnectWorker,
+          GetWorker getRemoveWorker
         ){
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
@@ -128,7 +123,7 @@ public class Gui {
 
         // asking for confirmation
         removeButton.addActionListener(listener -> {
-            removeWorker.execute();
+            getRemoveWorker.getWorker().execute();
         });
 
         // create connectio button
@@ -136,7 +131,7 @@ public class Gui {
         connectButton.setMaximumSize(new Dimension(150, 40));
 
         connectButton.addActionListener(listener -> {
-            connectWorker.execute();
+            getConnectWorker.getWorker().execute();
         });
 
         Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
@@ -272,6 +267,12 @@ public class Gui {
         });
 
         windowFrame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+        windowFrame.setBounds(
+                Toolkit.getDefaultToolkit().getScreenSize().width / 2 - WINDOW_WIDTH / 2,
+                Toolkit.getDefaultToolkit().getScreenSize().height / 2 - WINDOW_HEIGHT / 2,
+                WINDOW_WIDTH,
+                WINDOW_HEIGHT
+        );
         windowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         windowFrame.setVisible(true);
     }
