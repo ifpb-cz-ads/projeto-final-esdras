@@ -9,6 +9,7 @@ import java.awt.*;
 
 public class ConfirmDeleteCollectionDialog extends JDialog {
     private String collectionName = null;
+    private JLabel titleLable = new JLabel();
     public ConfirmDeleteCollectionDialog(){
         super();
 
@@ -25,7 +26,7 @@ public class ConfirmDeleteCollectionDialog extends JDialog {
 
         setTitle("Remover coleção");
 
-        JLabel titleLable = new JLabel("Tem certeza que deseja a coleção " + collectionName + "?");
+        titleLable = new JLabel();
 
         titleLable.setFont(Gui.SANS_18);
 
@@ -56,7 +57,7 @@ public class ConfirmDeleteCollectionDialog extends JDialog {
     }
 
     public void askConfirm(String collectionName){
-        this.collectionName = collectionName;
+        titleLable.setText("Quer mesmo excluir: " + collectionName + "?");
         setVisible(true);
     }
 }

@@ -11,6 +11,7 @@ import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 
 
+import me.edu.utils.GetWorker;
 import me.edu.view.CollectionsPanel;
 import me.edu.view.DatabasesPanel;
 import me.edu.view.DocumentsPanel;
@@ -99,8 +100,8 @@ public class Gui {
      * Creates a list item with a titel, a connect button and a remove button*/
     public static JPanel createListItem(
           String name, 
-          SwingWorker<Void, Void> connectWorker,
-          SwingWorker<Void, Void> removeWorker
+          GetWorker getConnectWorker,
+          GetWorker getRemoveWorker
         ){
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
@@ -122,7 +123,7 @@ public class Gui {
 
         // asking for confirmation
         removeButton.addActionListener(listener -> {
-            removeWorker.execute();
+            getRemoveWorker.getWorker().execute();
         });
 
         // create connectio button
@@ -130,7 +131,7 @@ public class Gui {
         connectButton.setMaximumSize(new Dimension(150, 40));
 
         connectButton.addActionListener(listener -> {
-            connectWorker.execute();
+            getConnectWorker.getWorker().execute();
         });
 
         Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);

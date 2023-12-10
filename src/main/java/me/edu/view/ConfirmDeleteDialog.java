@@ -10,7 +10,8 @@ import me.edu.controller.ClientController;
 import me.edu.ui.Gui;
 
 public class ConfirmDeleteDialog extends JDialog {
-    private String dbName;
+    private String dbName = null;
+    JLabel titleLable = new JLabel();
 
     public ConfirmDeleteDialog(DatabasesPanel databasesPanel) {
         super();
@@ -28,7 +29,6 @@ public class ConfirmDeleteDialog extends JDialog {
 
         setTitle("Remover DB");
 
-        JLabel titleLable = new JLabel("Tem certeza que deseja excluir o db " + dbName + "?");
 
         titleLable.setFont(Gui.SANS_18);
 
@@ -59,7 +59,7 @@ public class ConfirmDeleteDialog extends JDialog {
     }
 
     public void askConfirm(String databaseName) {
-        dbName = databaseName;
+        titleLable.setText("Quer mesmo excluir: " + databaseName + "?");
         setVisible(true);
     }
 }
