@@ -190,6 +190,7 @@ public class ClientController {
      * Deletes a database*/
     public static List<String> deleteDatabase(String databaseName) {
         MongoDatabase db = client.getDatabase(databaseName);
+
         if (db != null) {
             db.drop();
             MongoIterable<String> dbs = client.listDatabaseNames();
