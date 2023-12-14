@@ -39,7 +39,7 @@ public class ConfirmDeleteCollectionDialog extends JDialog {
         confirmDeleteBtn.setFont(Gui.SANS_18);
         confirmDeleteBtn.setForeground(Gui.WHITE);
 
-        // listener for create database
+        // listener to delete collection
         confirmDeleteBtn.addActionListener(listener -> {
             new SwingWorker<Boolean, Void>(){
                 @Override
@@ -57,6 +57,7 @@ public class ConfirmDeleteCollectionDialog extends JDialog {
     }
 
     public void askConfirm(String collectionName){
+        this.collectionName = collectionName;
         titleLable.setText("Quer mesmo excluir: " + collectionName + "?");
         setVisible(true);
     }

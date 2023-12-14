@@ -46,11 +46,10 @@ public class ConfirmDeleteDialog extends JDialog {
             new SwingWorker<Boolean, Void>(){
                 @Override
                 public Boolean doInBackground(){
-                    ClientController.deleteDatabase(dbName);
                     return  true;
                 }
             }.execute();
-
+            ClientController.deleteDatabase(dbName);
             setVisible(false);
         });
 
@@ -59,6 +58,7 @@ public class ConfirmDeleteDialog extends JDialog {
     }
 
     public void askConfirm(String databaseName) {
+        dbName = databaseName;
         titleLable.setText("Quer mesmo excluir: " + databaseName + "?");
         setVisible(true);
     }
